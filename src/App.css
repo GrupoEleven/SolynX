@@ -1,171 +1,334 @@
-/* Estilos base - Versão com Imagem de Fundo e Azul Coinbase */
+/* Modern Crypto Presale Dashboard */
 :root {
-  --primary-color: #0051ff00; /* Azul Coinbase */
-  --secondary-color: #ffffff;
-  --accent-color: #dddddd;
-  --text-color: #333333;
-  --text-light: #666666;
-  --border-color: #dad8d8f6;
-  --success-color: #00C853; /* Verde mais vibrante */
-  --warning-color: #FFAB00;
-  --error-color: #FF3D00;
-  --card-bg: rgba(204, 204, 204, 0.979);
-  --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  /* Color Palette */
+  --primary-color: #364857be;
+  --secondary-color: #34495e;
+  --accent-color: #0099ff;
+  --accent-hover: #2980b9;
+  --text-color: #ecf0f1;
+  --text-muted: #bdc3c7;
+  --background-color: #1a1a2e;
+  --card-bg: #06213f;
+  --card-shadow: 0 10px 20px rgba(0, 0, 0, 0.205);
+  --success-color: #2ecc71;
+  --error-color: #e74c3c;
+  --warning-color: #f39c12;
+  --border-radius: 12px;
+  --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  
+  /* Gradients */
+  --gradient-primary: linear-gradient(135deg, #09996e7a, #2c3e50);
+  --gradient-accent: linear-gradient(135deg, #3498db, #0cd6b4c0);
 }
 
 * {
-  box-sizing: border-box;
   margin: 0;
   padding: 0;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  box-sizing: border-box;
+  font-family: 'Poppins', 'Segoe UI', system-ui, -apple-system, sans-serif;
 }
 
 body {
-  background-color: #000000;
+  background-color: var(--background-color);
   color: var(--text-color);
-  min-height: 100vh;
-  line-height: 1.5;
-  background-image: url('/a1.png'); /* Adicione sua imagem aqui */
-/*  background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
-  background-repeat: no-repeat;*/
+  line-height: 1.6;
+  overflow-x: hidden;
+  background-image: url('/agrox4.png');
+  background-size: cover;              /* Cobre toda a tela */
+  background-position: center;         /* Centraliza a imagem */
+     /* Não repete */
+     background-attachment: fixed;        /* Fixa a imagem no fundo ao rolar */
+    
+        
+  
 }
 
 .App {
-  padding: 1.5rem;
-  max-width: 1000px;
-  margin: 0 auto;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
-/* Efeito de overlay para melhor legibilidade */
-body::before {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(255, 255, 255, 0.85);
-  z-index: -1;
-}
-
-/* Section styles */
-.section {
-  margin-bottom: 2rem;
-}
-
-/* Card styles */
-.modern-card {
-  background: var(--card-bg);
-  border-radius: 12px;
-  border: 1px solid var(--border-color);
-  box-shadow: var(--card-shadow);
-  padding: 1.5rem;
-  transition: all 0.3s ease;
-}
-
-.glass-card {
-  background: var(--card-bg);
-  border-radius: 10px;
-  border: 1px solid var(--border-color);
-  padding: 1.25rem;
-  margin-top: 1.5rem;
-}
-
-/* Header */
-.presale-header {
+/* Header Styles - Enhanced */
+.app-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 1rem 2rem;
+  background: var(--gradient-primary);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+  position: relative;
+  z-index: 100;
+}
+
+.header-left .project-name {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--text-color);
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.project-logo {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: contain;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.token-info {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  background-color: rgba(0, 0, 0, 0.2);
+  padding: 0.6rem 1.2rem;
+  border-radius: 50px;
+  backdrop-filter: blur(5px);
+  transition: var(--transition);
+}
+
+.token-info:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.token-icon {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+}
+
+.token-name {
+  font-weight: 600;
+  color: var(--text-color);
+  font-size: 0.95rem;
+}
+
+.token-price {
+  font-size: 0.9rem;
+  opacity: 0.9;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.price-change {
+  font-size: 0.8rem;
+  padding: 0.1rem 0.4rem;
+  border-radius: 4px;
+}
+
+.price-up {
+  background-color: rgba(46, 204, 113, 0.2);
+  color: var(--success-color);
+}
+
+.price-down {
+  background-color: rgba(231, 76, 60, 0.2);
+  color: var(--error-color);
+}
+
+/* Main Content Styles - Enhanced */
+.main-content {
+  display: flex;
+  flex: 1;
+  padding: 2rem;
+  gap: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.left-side {
+  flex: 1;
+  max-width: 350px;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.right-side {
+  flex: 2;
+}
+
+/* Token Details Card - Enhanced */
+.token-details {
+  background-color: var(--card-bg);
+  border-radius: var(--border-radius);
+  padding: 1.8rem;
+  box-shadow: var(--card-shadow);
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  margin-top: 20%;
+  height: auto;
+  max-height: none;
+  }
+
+.token-details h2 {
   margin-bottom: 1.5rem;
+  color: var(--accent-color);
+  font-size: 1.5rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.detail-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.9rem 0;
+  border-bottom: 5px solid rgba(255, 255, 255, 0.08);
+}
+
+.detail-itemm {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.9rem 0;
+  border-bottom: 5px solid rgba(255, 255, 255, 0.08);
+margin-right: 1%;
+margin-top: -10%;
+}
+
+.detail-itemmm {
+
+margin-right: -1%;
+}
+
+.detail-item:last-child {
+  border-bottom: none;
+}
+
+.detail-label {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.detail-value {
+  font-weight: 500;
+  text-align: right;
+}
+
+.highlight-value {
+  color: var(--accent-color);
+  font-weight: 600;
+}
+
+
+/* Presale Card - Enhanced */
+.presale-content {
+  background-color: var(--card-bg);
+  border-radius: var(--border-radius);
+  padding: 2.5rem;
+  box-shadow: var(--card-shadow);
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.presale-header {
+  margin-bottom: 2rem;
+  text-align: center;
 }
 
 .presale-title {
-  font-size: 1.5rem;
-  font-weight: 600;
+  font-size: 1.8rem;
   color: var(--text-color);
-  margin-left: 25%;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  background: linear-gradient(to right, var(--accent-color), #01d181);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
-.wallet-connect-button {
-  background: var(--primary-color);
-  border: none;
-  border-radius: 6px;
-  color: rgb(255, 255, 255);
-  font-weight: 500;
-  padding: 0.5rem 1rem;
-  font-size: 0.9rem;
-  cursor: pointer;
-  transition: all 0.2s ease;
+.presale-subtitle {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  max-width: 600px;
+  margin: 0 auto;
 }
 
-.wallet-connect-button:hover {
-  opacity: 0.9;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 82, 255, 0.2);
-}
-
-/* Countdown */
+/* Countdown Styles - Enhanced */
 .countdown-row {
-  width: 100%;
-  margin-bottom: 1.5rem;
+  margin-bottom: 2.5rem;
 }
 
 .countdown-modern {
-  margin-bottom: 1rem;
+  background-color: rgba(52, 73, 94, 0.3);
+  border-radius: var(--border-radius);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.countdown-title {
+  text-align: center;
+  margin-bottom: 1.2rem;
+  font-size: 1.1rem;
+  color: var(--text-muted);
 }
 
 .timer-row {
   display: flex;
-  gap: 0.75rem;
-  width: 100%;
-  justify-content: center;
+  justify-content: space-between;
+  text-align: center;
+  gap: 1rem;
 }
 
 .timer-segment-modern {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  min-width: 60px;
+  flex: 1;
+  background-color: rgba(0, 0, 0, 0.2);
+  padding: 1rem 0.5rem;
+  border-radius: 8px;
+  transition: var(--transition);
+}
+
+.timer-segment-modern:hover {
+  transform: translateY(-5px);
+  background-color: rgba(59, 153, 216, 0.24);
 }
 
 .timer-value {
-  font-size: 1.75rem;
-  font-weight: 600;
-  color: var(--text-color);
-  font-feature-settings: "tnum";
+  font-size: 2rem;
+  font-weight: 700;
+  display: block;
+  color: var(--accent-color);
+  margin-bottom: 0.2rem;
 }
 
 .timer-label {
-  font-size: 0.7rem;
+  font-size: 0.75rem;
+  opacity: 0.8;
   text-transform: uppercase;
   letter-spacing: 1px;
-  color: var(--text-light);
-  font-weight: 500;
 }
 
-/* Progress bar - Efeito especial em verde */
+/* Progress Bar - Enhanced */
 .progress-container {
-  width: 100%;
-  background-color: #353434;
-  border-radius: 12px;
-  height: 20px;
-  margin: 0.5rem 0;
+  height: 12px;
+  background-color: rgba(52, 73, 94, 0.5);
+  border-radius: 10px;
   position: relative;
   overflow: hidden;
+  margin: 1.5rem 0;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
 }
 
 .progress-bar {
   height: 100%;
-  border-radius: 8px;
-  background: linear-gradient(90deg, #46464650, #50505031);
+  background: var(--gradient-accent);
   transition: width 0.5s ease;
   position: relative;
-  overflow: hidden;
 }
 
-/* Efeito de animação na barra de progresso */
 .progress-bar::after {
   content: '';
   position: absolute;
@@ -174,15 +337,15 @@ body::before {
   right: 0;
   bottom: 0;
   background: linear-gradient(
-    to right,
-    rgba(35, 182, 145, 0.562) 0%,
-    rgba(83, 83, 83, 0.404) 50%,
-    rgba(49, 49, 49, 0.521) 100%
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.3) 50%,
+    rgba(255, 255, 255, 0.116) 100%
   );
-  animation: shine s infinite;
+  animation: shimmer 2s infinite;
 }
 
-@keyframes shine {
+@keyframes shimmer {
   0% { transform: translateX(-100%); }
   100% { transform: translateX(100%); }
 }
@@ -192,175 +355,183 @@ body::before {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: rgb(255, 255, 255);
-  text-shadow: 0 1px 1px rgba(255, 255, 255, 0);
+  font-size: 0.8rem;
+  font-weight: bold;
+  color: white;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
-/* Columns layout */
-.presale-columns {
+.progress-stats {
   display: flex;
-  gap: 1.5rem;
+  justify-content: space-between;
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
 }
 
-.stats-column {
-  flex: 1;
-}
-
-.purchase-column {
-  flex: 1;
-}
-
-/* Stats section */
-.stats-modern {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 0.75rem;
-}
-
-.stat-item-modern {
-  padding: 0.9rem;
-  background: var(--secondary-color);
-  border-radius: 8px;
-  display: flex;
-  flex-direction: column;
-}
-
-.stat-label {
-  font-size: 0.75rem;
-  color: var(--text-light);
-  margin-bottom: 0.25rem;
-  font-weight: 500;
-}
-
-.stat-value {
-  font-size: 0.95rem;
-  font-weight: 600;
-}
-
-.highlight {
-  color: #0051ff; /* Azul Coinbase para destaques */
-  font-weight: 700;
-}
-
-/* Purchase section */
+/* Purchase Section - Enhanced */
 .purchase-modern {
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
+  margin-top: 2rem;
 }
 
 .amount-selector {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-margin-left: 20%;
+  margin-bottom: 1.8rem;
 }
 
 .amount-selector label {
-  font-size: 0.8rem;
-  color: var(--text-light);
-  font-weight: 500;
-margin-right: 25%;
+  display: block;
+  margin-bottom: 0.8rem;
+  font-size: 0.95rem;
+  color: var(--text-muted);
 }
 
 .amount-input {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.8rem;
+  position: relative;
 }
 
 .amount-input input {
-  padding: 0.75rem;
+  background-color: rgba(52, 73, 94, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 8px;
-  border: 1px solid var(--border-color);
-  background: rgb(255, 255, 255);
+  padding: 1rem 1.2rem;
   color: var(--text-color);
-  font-size: 0.95rem;
-  outline: none;
-  transition: all 0.2s ease;
+  font-size: 1.1rem;
+  width: 100%;
+  transition: var(--transition);
 }
 
 .amount-input input:focus {
-  border-color: var(--primary-color);
-  box-shadow: 0 0 0 2px rgba(0, 81, 255, 0.685);
+  outline: none;
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+}
+
+.token-symbol {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  font-size: 0.9rem;
 }
 
 .quick-buttons {
   display: flex;
-  gap: 0.5rem;
+  gap: 0.8rem;
+  margin-top: 0.5rem;
 }
 
 .quick-buttons button {
   flex: 1;
-  padding: 0.5rem;
-  border: 1px solid var(--border-color);
+  background-color: rgba(52, 73, 94, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 6px;
-  background: rgb(255, 255, 255);
+  padding: 0.6rem;
   color: var(--text-color);
-  font-size: 0.8rem;
-  font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: var(--transition);
+  font-size: 0.85rem;
 }
 
 .quick-buttons button:hover {
-  background: var(--secondary-color);
+  background-color: var(--accent-color);
+  transform: translateY(-2px);
 }
 
+/* Summary Section - Enhanced */
 .summary-modern {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  background: var(--secondary-color);
-  padding: 1.25rem;
-  border-radius: 8px;
+  background-color: rgba(52, 73, 94, 0.3);
+  border-radius: var(--border-radius);
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.summary-title {
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+  color: var(--text-muted);
 }
 
 .summary-row {
   display: flex;
   justify-content: space-between;
-  font-size: 0.85rem;
+  padding: 0.7rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 0.95rem;
 }
 
-.summary-row span:first-child {
-  color:var(--text-light);
+.summary-row:last-child {
+  border-bottom: none;
 }
 
-/* Botão de compra azul estilo Coinbase */
+.summary-label {
+  color: var(--text-muted);
+}
+
+.summary-value {
+  font-weight: 500;
+}
+
+.summary-row.highlight {
+  color: var(--accent-color);
+  font-weight: 600;
+  font-size: 1.05rem;
+}
+
+/* Buy Button - Enhanced */
 .buy-button-modern {
-  padding: 0.9rem;
+  width: 100%;
+  background: var(--gradient-accent);
+  color: white;
   border: none;
   border-radius: 8px;
-  background: rgb(0, 83, 236);
-  color: rgb(190, 24, 24);
-  font-size: 0.9rem;
+  padding: 1.2rem;
+  font-size: 1.1rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
-  box-shadow: 0 2px 8px rgba(0, 81, 255, 0.959);
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
 }
 
-.buy-button-modern:hover:not(:disabled) {
-  opacity: 0.9;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 82, 255, 0.3);
+.buy-button-modern:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(52, 152, 219, 0.4);
+}
+
+.buy-button-modern:active {
+  transform: translateY(0);
 }
 
 .buy-button-modern:disabled {
-background: rgba(0, 89, 255, 0.979);
+  background: #7f8c8d;
   cursor: not-allowed;
-  color:
+  transform: none;
+  box-shadow: none;
+}
+
+.buy-button-modern .button-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
 
 .spinner {
   display: inline-block;
-  width: 18px;
-  height: 18px;
-  border: 2px solid rgba(177, 18, 18, 0.829);
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
   border-radius: 50%;
-  border-top-color: rgb(175, 0, 0);
+  border-top-color: white;
   animation: spin 1s ease-in-out infinite;
 }
 
@@ -368,117 +539,105 @@ background: rgba(0, 89, 255, 0.979);
   to { transform: rotate(360deg); }
 }
 
+/* Disclaimer - Enhanced */
 .disclaimer {
+  margin-top: 1.5rem;
   font-size: 0.75rem;
-  color: ;
+  opacity: 0.6;
   text-align: center;
-  margin-top: 0.5rem;
-  line-height: 1.4;
+  line-height: 1.5;
 }
 
-/* Transaction history */
-.transaction-details {
-  margin-top: 1.5rem;
+/* Wallet Button - Enhanced */
+.wallet-connect-button {
+  background: var(--gradient-accent) !important;
+  color: white !important;
+  border-radius: 8px !important;
+  height: 42px !important;
+  font-family: 'Poppins', sans-serif !important;
+  font-weight: 500 !important;
+  padding: 0 1.5rem !important;
+  transition: var(--transition) !important;
+  border: none !important;
+  box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3) !important;
 }
 
-.transaction-details h3 {
-  margin-bottom: 0.75rem;
-  font-size: 1.1rem;
-  color: var(--text-color);
+.wallet-connect-button:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4) !important;
 }
 
-.transaction-history {
-  margin-top: 1.5rem;
+/* Toast Styles - Enhanced */
+.Toastify__toast-container {
+  width: auto !important;
+  max-width: 450px;
 }
 
-.transaction-history h3 {
-  margin-bottom: 0.75rem;
-  font-size: 1.1rem;
-  color: var(--text-color);
-}
-
-.history-table {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.history-header {
-  display: flex;
-  padding: 0.75rem;
-  background: var(--secondary-color);
-  border-radius: 8px;
-  font-weight: 600;
-  font-size: 0.8rem;
-}
-
-.history-header span {
-  flex: 1;
-}
-
-.history-row {
-  display: flex;
-  padding: 0.75rem;
-  background: white;
-  border-radius: 8px;
-  font-size: 0.8rem;
-  align-items: center;
-  border: 1px solid var(--border-color);
-}
-
-.history-row span {
-  flex: 1;
-}
-
-.status-pending {
-  color: var(--warning-color);
-}
-
-.status-confirmed {
-  color: var(--success-color);
-}
-
-.status-failed {
-  color: var(--error-color);
-}
-
-/* Toast notifications */
 .Toastify__toast {
   border-radius: 8px !important;
-  background: rgb(255, 255, 255) !important;
-  border: 1px solid var(--border-color) !important;
-  color: var(--text-color) !important;
-  box-shadow: var(--card-shadow) !important;
+  font-family: 'Poppins', sans-serif !important;
+  padding: 1rem !important;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2) !important;
 }
 
-.Toastify__toast-body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+.Toastify__toast--success {
+  background: linear-gradient(135deg, var(--success-color), #27ae60) !important;
 }
 
-/* Destaque azul para o CURRENT BONUS */
-.bonus-highlight {
-  color: var(--primary-color);
-  font-weight: 700;
+.Toastify__toast--error {
+  background: linear-gradient(135deg, var(--error-color), #c0392b) !important;
 }
 
-/* Responsive adjustments */
+.Toastify__toast--warning {
+  background: linear-gradient(135deg, var(--warning-color), #e67e22) !important;
+}
+
+.Toastify__progress-bar {
+  height: 3px !important;
+}
+
+/* Animations */
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
+.floating {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Responsive Design - Enhanced */
+@media (max-width: 1024px) {
+  .main-content {
+    flex-direction: column;
+    padding: 1.5rem;
+  }
+  
+  .left-side {
+    max-width: 100%;
+    margin-bottom: 2rem;
+  }
+  
+  .presale-content {
+    padding: 2rem;
+  }
+}
+
 @media (max-width: 768px) {
-  .App {
+  .app-header {
     padding: 1rem;
-  }
-  
-  .presale-columns {
     flex-direction: column;
-  }
-  
-  .presale-header {
-    flex-direction: column;
-    align-items: flex-start;
     gap: 1rem;
   }
   
-  .wallet-connect-button {
+  .header-left, .header-right {
     width: 100%;
+    justify-content: center;
+  }
+  
+  .token-info {
+    margin: 0 auto;
   }
   
   .timer-row {
@@ -486,700 +645,191 @@ background: rgba(0, 89, 255, 0.979);
   }
   
   .timer-segment-modern {
-    min-width: calc(50% - 0.5rem);
-    margin-bottom: 0.5rem;
-  }
-  
-  .presale-title {
-    font-size: 1.3rem;
-  }
-  
-  .modern-card {
-    padding: 1.25rem;
-  }
-}
-
-
-/* Adicione estas regras ao seu CSS existente */
-
-.countdown-modern {
-  margin-bottom: 1rem;
-  position: relative;
-  padding: 20px;
-  border-radius: 16px;
-  background: white;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  z-index: 1;
-  overflow: hidden;
-}
-
-.countdown-modern::before {
-  content: '';
-  position: absolute;
-  top: -3px;
-  left: -3px;
-  right: -3px;
-  bottom: -3px;
-  background: linear-gradient(
-    135deg,
-    rgb(5, 102, 81) 0%,
-    rgba(0, 0, 0, 0.986) 50%,
-    rgb(0, 0, 0) 100%
-  );
-  background-size: 400% 400%;
-  z-index: -1;
-  border-radius: 20px;
-  animation: borderGradient 0s ease infinite, shimmer 2s linear infinite;
-  box-shadow: 0 0 12px rgba(4, 255, 222, 0), 0 0 24px rgba(0, 0, 0, 0.25);
-  overflow: hidden;
-}
-
-/* Efeito de brilho interno */
-.countdown-modern::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: radial-gradient(
-    circle at center,
-    rgba(10, 170, 157, 0) 0%,
-    transparent 70%
-  );
-  z-index: -1;
-}
-
-@keyframes borderGradient {
-  0% {
-    background-position: 0% 50%;
-    opacity: 0.8;
-  }
-  50% {
-    background-position: 100% 50%;
-    opacity: 1;
-  }
-  100% {
-    background-position: 0% 50%;
-    opacity: 0.8;
-  }
-}
-
-/* Ajuste nos elementos do timer para contrastar com o novo fundo */
-.timer-segment-modern {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  min-width: 60px;
-  padding: 10px;
-  background: rgba(255, 255, 255, 0.9);
-  border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-}
-
-.timer-value {
-  font-size: 1.7rem;
-  font-weight: 700;
-  color: var(--primary-color); /* Azul Coinbase */
-  font-feature-settings: "tnum";
-color: #000000;
-}
-
-.timer-label {
-  font-size: 0.7rem;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  color: var(--text-light);
-  font-weight: 600;
-  margin-top: 4px;
-}
-
-
-
-/* Adicione estas regras ao seu CSS existente */
-
-/* Container da seção de compra */
-.purchase-modern {
-  display: flex;
-  flex-direction: column;
-  gap: 2.1rem;
-  padding: 1.5rem;
-  border-radius: 12px;
-  border: 2px solid var(--border-color);
-  background: rgba(255, 255, 255, 0.945);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  position: relative;
-  overflow: hidden;
-}
-
-/* Borda superior colorida como CURRENT PHASE */
-.purchase-modern::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 4px;
-  background: var(--primary-color);
-}
-
-/* Estilo para o container do CURRENT PHASE */
-.stat-item-modern.highlight-container {
-  padding: 0.9rem;
-  border-radius: 8px;
-  border: 1px solid var(--border-color);
-  background: rgb(255, 255, 255);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  position: relative;
-}
-
-.stat-item-modern.highlight-container::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 4px;
-  background: var(--primary-color);
-}
-
-/* Ajuste do texto CURRENT PHASE */
-.stat-item-modern.highlight-container .stat-value {
-  color: var(--primary-color);
-  font-weight: 700;
-}
-
-/* Ajuste do input para ficar mais estreito */
-.amount-input input {
-  padding: 0.75rem;
-  border-radius: 8px;
-  border: 1px solid var(--border-color);
-  background: rgb(255, 255, 255);
-  color: var(--text-color);
-  font-size: 0.95rem;
-  outline: none;
-  transition: all 0.2s ease;
-  max-width: 230px; /* Largura reduzida */
-
-}
-
-/* Botões rápidos mais compactos */
-.quick-buttons {
-  display: flex;
-  gap: 0.5rem;
-  max-width: 200px; /* Alinhado com o input */
-  margin-left: 5%;
-}
-
-.quick-buttons button {
-  flex: 1;
-  padding: 0.4rem; /* Mais compacto */
-  border: 1px solid var(--border-color);
-  border-radius: 6px;
-  background: rgb(255, 255, 255);
-  color: var(--text-color);
-  font-size: 0.75rem; /* Fonte menor */
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-/* Ajuste do summary para ficar mais compacto */
-.summary-modern {
-  display: flex;
-  flex-direction: column;
-  gap: 0.6rem; /* Espaçamento reduzido */
-  background: var(--secondary-color);
-  padding: 1rem; /* Padding reduzido */
-  border-radius: 8px;
-  font-size: 0.8rem; /* Fonte um pouco menor */
-}
-
-/* Destaque para o bônus */
-.bonus-highlight {
-  color: var(--primary-color);
-  font-weight: 700;
-  display: flex;
-  justify-content: space-between;
-  padding: 0.4rem 0;
-  border-top: 1px dashed var(--border-color);
-  margin-top: 0.4rem;
-}
-
-/* Botão de compra mais compacto */
-.buy-button-modern {
-  padding: 0.8rem; /* Mais compacto */
-  border: none;
-  border-radius: 8px;
-  background: var(--primary-color);
-  color: rgb(255, 255, 255);
-  font-size: 0.85rem; /* Fonte um pouco menor */
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  box-shadow: 0 2px 8px rgba(0, 81, 255, 0.322);
-  margin-top: 0.5rem;
-}
-
-/* Estilos base - Versão com Imagem de Fundo e Azul Coinbase */
-:root {
-  --primary-color: #0051ff; /* Azul Coinbase */
-  --secondary-color: #ffffff;
-  --accent-color: #dddddd;
-  --text-color: #333333;
-  --text-light: #666666;
-  --border-color: #dad8d8f6;
-  --success-color: #00C853;
-  --warning-color: #FFAB00;
-  --error-color: #FF3D00;
-  --card-bg: rgba(204, 204, 204, 0.979);
-  --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-}
-
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-}
-
-body {
-  background-color: #000000;
-  color: var(--text-color);
-  min-height: 100vh;
-  line-height: 1.5;
-  background-image: url('/a1.png');
-}
-
-.App {
-  padding: 1rem;
-  max-width: 1000px;
-  margin: 0 auto;
-}
-
-/* Efeito de overlay para melhor legibilidade */
-body::before {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(255, 255, 255, 0.85);
-  z-index: -1;
-}
-
-/* Section styles */
-.section {
-  margin-bottom: 1.5rem;
-}
-
-/* Card styles */
-.modern-card {
-  background: var(--card-bg);
-  border-radius: 12px;
-  border: 1px solid var(--border-color);
-  box-shadow: var(--card-shadow);
-  padding: 1.25rem;
-  transition: all 0.3s ease;
-}
-
-.glass-card {
-  background: var(--card-bg);
-  border-radius: 10px;
-  border: 1px solid var(--border-color);
-  padding: 1rem;
-  margin-top: 1rem;
-}
-
-/* Header */
-.presale-header {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-bottom: 1.5rem;
-  gap: 1rem;
-}
-
-.presale-title {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: var(--text-color);
-  text-align: center;
-  width: 100%;
-}
-
-.wallet-connect-button {
-  background: var(--primary-color);
-  border: none;
-  border-radius: 6px;
-  color: white;
-  font-weight: 500;
-  padding: 0.75rem 1.5rem;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  width: 100%;
-  max-width: 300px;
-}
-
-.wallet-connect-button:hover {
-  opacity: 0.9;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 82, 255, 0.2);
-}
-
-/* Countdown */
-.countdown-row {
-  width: 100%;
-  margin-bottom: 1.5rem;
-}
-
-.countdown-modern {
-  margin-bottom: 1rem;
-  padding: 1rem;
-}
-
-.timer-row {
-  display: flex;
-  gap: 0.5rem;
-  width: 100%;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-
-.timer-segment-modern {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  min-width: 70px;
-  padding: 0.75rem;
-  background: rgba(255, 255, 255, 0.9);
-  border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  margin: 0.25rem;
-}
-
-.timer-value {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #000000;
-  font-feature-settings: "tnum";
-}
-
-.timer-label {
-  font-size: 0.7rem;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  color: var(--text-light);
-  font-weight: 600;
-  margin-top: 4px;
-}
-
-/* Progress bar */
-.progress-container {
-  width: 100%;
-  background-color: #353434;
-  border-radius: 12px;
-  height: 20px;
-  margin: 0.5rem 0;
-  position: relative;
-  overflow: hidden;
-}
-
-.progress-bar {
-  height: 100%;
-  border-radius: 8px;
-  background: linear-gradient(90deg, #46464650, #50505031);
-  transition: width 0.5s ease;
-  position: relative;
-}
-
-.progress-text {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: rgb(255, 255, 255);
-}
-
-/* Columns layout */
-.presale-columns {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-.stats-column, .purchase-column {
-  width: 100%;
-}
-
-/* Stats section */
-.stats-modern {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.75rem;
-}
-
-.stat-item-modern {
-  padding: 0.9rem;
-  background: var(--secondary-color);
-  border-radius: 8px;
-  display: flex;
-  flex-direction: column;
-}
-
-.stat-label {
-  font-size: 0.75rem;
-  color: var(--text-light);
-  margin-bottom: 0.25rem;
-  font-weight: 500;
-}
-
-.stat-value {
-  font-size: 0.95rem;
-  font-weight: 600;
-}
-
-.highlight {
-  color: var(--primary-color);
-  font-weight: 700;
-}
-
-/* Purchase section */
-.purchase-modern {
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-  padding: 1.25rem;
-}
-
-.amount-selector {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  width: 100%;
-}
-
-.amount-selector label {
-  font-size: 0.9rem;
-  color: var(--text-light);
-  font-weight: 500;
-}
-
-.amount-input {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  width: 100%;
-}
-
-.amount-input input {
-  padding: 0.75rem;
-  border-radius: 8px;
-  border: 1px solid var(--border-color);
-  background: rgb(255, 255, 255);
-  color: var(--text-color);
-  font-size: 1rem;
-  outline: none;
-  transition: all 0.2s ease;
-  width: 100%;
-}
-
-.quick-buttons {
-  display: flex;
-  gap: 0.5rem;
-  width: 100%;
-  flex-wrap: wrap;
-}
-
-.quick-buttons button {
-  flex: 1;
-  min-width: calc(50% - 0.5rem);
-  padding: 0.6rem;
-  border: 1px solid var(--border-color);
-  border-radius: 6px;
-  background: rgb(255, 255, 255);
-  color: var(--text-color);
-  font-size: 0.85rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.summary-modern {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  background: var(--secondary-color);
-  padding: 1.25rem;
-  border-radius: 8px;
-  width: 100%;
-}
-
-.summary-row {
-  display: flex;
-  justify-content: space-between;
-  font-size: 0.9rem;
-}
-
-.summary-row span:first-child {
-  color: var(--text-light);
-}
-
-/* Botão de compra */
-.buy-button-modern {
-  padding: 1rem;
-  border: none;
-  border-radius: 8px;
-  background: var(--primary-color);
-  color: white;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  width: 100%;
-  margin-top: 0.5rem;
-}
-
-.spinner {
-  display: inline-block;
-  width: 18px;
-  height: 18px;
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  border-radius: 50%;
-  border-top-color: white;
-  animation: spin 1s ease-in-out infinite;
-}
-
-.disclaimer {
-  font-size: 0.75rem;
-  color: var(--text-light);
-  text-align: center;
-  margin-top: 1rem;
-  line-height: 1.4;
-}
-
-/* Transaction history */
-.transaction-details, .transaction-history {
-  margin-top: 1.5rem;
-}
-
-.transaction-details h3, .transaction-history h3 {
-  margin-bottom: 1rem;
-  font-size: 1.1rem;
-  color: var(--text-color);
-}
-
-.history-table {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.history-header, .history-row {
-  display: none; /* Ocultar em mobile para simplificar */
-}
-
-/* Toast notifications */
-.Toastify__toast {
-  border-radius: 8px !important;
-  font-size: 0.9rem !important;
-}
-
-/* Efeitos especiais para countdown */
-.countdown-modern::before {
-  content: '';
-  position: absolute;
-  top: -3px;
-  left: -3px;
-  right: -3px;
-  bottom: -3px;
-  background: linear-gradient(
-    135deg,
-    rgb(5, 102, 81) 0%,
-    rgba(0, 0, 0, 0.986) 50%,
-    rgb(0, 0, 0) 100%
-  );
-  z-index: -1;
-  border-radius: 20px;
-}
-
-/* Media queries para telas maiores */
-@media (min-width: 768px) {
-  .App {
-    padding: 1.5rem;
-  }
-  
-  .presale-header {
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-  }
-  
-  .presale-title {
-    margin-left: 25%;
-    text-align: left;
-  }
-  
-  .wallet-connect-button {
-    width: auto;
-    max-width: none;
-  }
-  
-  .presale-columns {
-    flex-direction: row;
-  }
-  
-  .timer-row {
-    gap: 0.75rem;
-    flex-wrap: nowrap;
-  }
-  
-  .timer-segment-modern {
-    min-width: 60px;
-  }
-  
-  .amount-selector {
-    margin-left: 20%;
-  }
-  
-  .amount-selector label {
-    margin-right: 25%;
+    flex: 0 0 48%;
+    margin-bottom: 0.8rem;
   }
   
   .quick-buttons {
-    max-width: 200px;
-    margin-left: 5%;
+    flex-wrap: wrap;
   }
   
-  .amount-input input {
-    max-width: 230px;
-  }
-  
-  .history-header, .history-row {
-    display: flex;
+  .quick-buttons button {
+    flex: 0 0 calc(50% - 0.4rem);
   }
 }
 
-/* Animações */
-@keyframes spin {
-  to { transform: rotate(360deg); }
+@media (max-width: 480px) {
+  .main-content {
+    padding: 1rem;
+  }
+  
+  .presale-content {
+    padding: 1.5rem;
+  }
+  
+  .timer-segment-modern {
+    flex: 0 0 100%;
+  }
+  
+  .quick-buttons button {
+    flex: 0 0 100%;
+  }
+  
+  .token-info {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+  }
 }
 
-@keyframes borderGradient {
-  0% {
-    background-position: 0% 50%;
-    opacity: 0.8;
+/* Additional UI Elements */
+.divider {
+  height: 1px;
+  background-color: rgba(255, 255, 255, 0.1);
+  margin: 1.5rem 0;
+}
+
+.badge {
+  display: inline-block;
+  padding: 0.25rem 0.6rem;
+  border-radius: 50px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.badge-primary {
+  background-color: rgba(52, 152, 219, 0.2);
+  color: var(--accent-color);
+}
+
+.badge-success {
+  background-color: rgba(46, 204, 113, 0.2);
+  color: var(--success-color);
+}
+
+/* Tooltip */
+.tooltip {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.tooltip .tooltip-text {
+  visibility: hidden;
+  width: 200px;
+  background-color: var(--secondary-color);
+  color: var(--text-color);
+  text-align: center;
+  border-radius: 6px;
+  padding: 0.5rem;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  transition: opacity 0.3s;
+  font-size: 0.8rem;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+}
+
+.tooltip:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* Loading Skeleton */
+.skeleton {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% { opacity: 0.6; }
+  50% { opacity: 0.3; }
+  100% { opacity: 0.6; }
+}
+
+
+/* Ajustes específicos para o layout compacto à direita */
+.main-content {
+  display: flex;
+  flex: 1;
+  padding: 2rem;
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.left-side {
+  flex: 3; /* Mais espaço para o conteúdo principal */
+}
+
+.right-side {
+  flex: 1; /* Espaço reduzido para o card de pré-venda */
+  min-width: 320px; /* Largura mínima para manter a legibilidade */
+}
+
+/* Card de Pré-venda Ultra Compacto e Alinhado à Direita */
+.presale-content {
+  background-color: var(--card-bg);
+  border-radius: var(--border-radius);
+  padding: 1rem; /* Bem reduzido */
+  box-shadow: var(--card-shadow);
+  backdrop-filter: blur(3px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  height: fit-content;
+  width: 350px; /* Largura fixa menor */
+  margin-left: 100%; /* Joga pra direita */
+}
+
+.presale-header {
+  margin-bottom: 0.5rem;
+}
+
+.presale-title {
+  font-size: 0.85rem;
+  margin-bottom: 0.2rem;
+}
+
+.countdown-modern {
+  padding: 0.01rem;
+}
+
+.timer-value {
+  font-size: 1.2rem;
+}
+
+.summary-modern {
+  padding: 0.6rem;
+  font-size: 0.85rem;
+}
+
+.buy-button-modern {
+  padding: 0.4rem 0.8rem;
+  font-size: 0.85rem;
+}
+
+/* Ajustes para telas menores */
+@media (max-width: 1024px) {
+  .main-content {
+    flex-direction: column;
+    align-items: flex-end; /* Garante que fique à direita */
   }
-  50% {
-    background-position: 100% 50%;
-    opacity: 1;
+
+  .right-side {
+    min-width: 100%;
   }
-  100% {
-    background-position: 0% 50%;
-    opacity: 0.8;
+}
+
+@media (max-width: 768px) {
+  .presale-content {
+    width: 100%;
+    padding: 0.6rem;
+  }
+
+  .timer-segment-modern {
+    padding: 0.4rem 0.2rem;
   }
 }

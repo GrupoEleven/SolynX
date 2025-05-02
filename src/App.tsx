@@ -327,75 +327,97 @@ function WalletContent() {
 
   return (
     <div className="App">
-      <section id="presale" className="section">
-        <div className="presale-content modern-card">
-          <div className="presale-header">
-            <h2 className="presale-title">Exclusive Opportunity AGX Token Presale</h2>
-            <WalletMultiButton className="wallet-connect-button" />
+      <header className="app-header">
+        <div className="header-left">
+          <h1 className="project-name">DeAgro</h1>
+        </div>
+          <h2 className="projectagx"> Presale AGX</h2>        
+        <div className="header-right">
+          <div className="token-info">
+            <span className="token-name">AGX:</span>
+            <span className="token-price">${PRICE_PER_TOKEN.toFixed(4)}</span>
+            <p>/  next price: 0.075</p>          
           </div>
+          <WalletMultiButton className="wallet-connect-button" />
+        </div>
+      </header>
 
-          <div className="countdown-row">
-            <div className="countdown-modern">
-              <div className="timer-row">
-                <div className="timer-segment-modern">
-                  <span className="timer-value">{timeLeft.days}</span>
-                  <span className="timer-label">DAYS</span>
+      <main className="main-content">
+        <div className="left-side">
+          <div className="token-details">
+            <h2>CURRENT PHASE
+            ROUND: 1 OF 7</h2>
+            <div className="detail-item">
+              <span>	10 de Maio a 17 de Maio:	</span>
+              <span>$0,0375</span>
+            </div>
+            <div className="detail-item">
+              <span>	18 de Maio a 25 de Maio:</span>
+              <span>$0,075</span>
+            </div>
+            <div className="detail-item">
+              <span>	26 de Maio a 2 de junho:</span>
+             <p>$0,15</p>
+            </div>
+            <div>
+            <p className="detail-item">3 de junho a 10 de junho: 
+            <p></p>$0,30</p>
+            <p className="detail-item">11 de junho a 18 de junho:
+            <p></p>$0,60</p>
+            <p className="detail-item">19 de junho a 26 de junho:
+            <p></p>$1,20</p> 
+            <p className="detail-item">
+            <p></p></p>
+           
+           </div>
+           
+            <div className="detail-itemm">
+              <p>	27 de junho a 3 de julho: </p>
+                <p className="detail-itemmm">$2,40</p>
+            </div>
+            <div className="detail-item">
+            </div>
+          </div>
+        </div>
+
+        <div className="right-side">
+          <section id="presale" className="section">
+            <div className="presale-content modern-card">
+              <div className="presale-header">
+                <h2 className="presale-title">AGX Token Presale</h2>
+              </div>
+
+              <div className="countdown-row">
+                <div className="countdown-modern">
+                  <div className="timer-row">
+                    <div className="timer-segment-modern">
+                      <span className="timer-value">{timeLeft.days}</span>
+                      <span className="timer-label">DAYS</span>
+                    </div>
+                    <div className="timer-segment-modern">
+                      <span className="timer-value">{timeLeft.hours}</span>
+                      <span className="timer-label">HOURS</span>
+                    </div>
+                    <div className="timer-segment-modern">
+                      <span className="timer-value">{timeLeft.minutes}</span>
+                      <span className="timer-label">MINUTES</span>
+                    </div>
+                    <div className="timer-segment-modern">
+                      <span className="timer-value">{timeLeft.seconds}</span>
+                      <span className="timer-label">SECONDS</span>
+                    </div>
+                  </div>
                 </div>
-                <div className="timer-segment-modern">
-                  <span className="timer-value">{timeLeft.hours}</span>
-                  <span className="timer-label">HOURS</span>
-                </div>
-                <div className="timer-segment-modern">
-                  <span className="timer-value">{timeLeft.minutes}</span>
-                  <span className="timer-label">MINUTES</span>
-                </div>
-                <div className="timer-segment-modern">
-                  <span className="timer-value">{timeLeft.seconds}</span>
-                  <span className="timer-label">SECONDS</span>
+
+                <div className="progress-container">
+                  <div className="progress-bar" style={{ width: `${progressPercentage}%` }}></div>
+                  <span className="progress-text">{progressPercentage.toFixed(2)}% Complete</span>
                 </div>
               </div>
-            </div>
 
-            <div className="progress-container">
-              <div className="progress-bar" style={{ width: `${progressPercentage}%` }}></div>
-              <span className="progress-text">0% Complete</span>
-            </div>
-          </div>
-
-          <div className="presale-columns">
-            <div className="stats-column">
-              <div className="stats-modern">
-                <div className="stat-item-modern">
-                  <span className="stat-label">TOTAL SUPPLY</span>
-                  <span className="stat-value">2,000,000,000 AGX</span>
-                </div>
-                <div className="stat-item-modern">
-                  <span className="stat-label">PRESALE AVAILABLE</span>
-                  <span className="stat-value">800,000,000 AGX</span>
-                </div>
-                <div className="stat-item-modern">
-                  <span className="stat-label">TOKEN PRICE</span>
-                  <span className="stat-value">0.0375 SOL (next price 0.075)</span>
-                </div>
-                <div className="stat-item-modern">
-                  <span className="stat-label">SOLD</span>
-                  <span className="stat-value">0 AGX</span>
-                </div>
-                <div className="stat-item-modern">
-                  <span className="stat-label">RAISED</span>
-                  <span className="stat-value">0 SOL</span>
-                </div>
-                <div className="stat-item-modern">
-                  <span className="stat-label">CURRENT PHASE</span>
-                  <span className="stat-value highlight">ROUND 1 OF 7</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="purchase-column">
               <div className="purchase-modern">
                 <div className="amount-selector">
-                  <label>SELECT AMOUNT (AGX)</label>
+                  <label>SELECT AMOUNT (AGX):</label>
                   <div className="amount-input">
                     <input
                       type="number"
@@ -451,39 +473,9 @@ function WalletContent() {
                 </div>
               </div>
             </div>
-          </div>
+          </section>
         </div>
-
-        {lastTransaction && (
-          <div className="transaction-details glass-card">
-            <h3>Last Transaction</h3>
-            <p>ID {lastTransaction.slice(0, 8)}...{lastTransaction.slice(-8)}</p>
-            <p>Status: {transactionHistory.find(tx => tx.txId === lastTransaction)?.status || 'pending'}</p>
-          </div>
-        )}
-
-        {transactionHistory.length > 0 && (
-          <div className="transaction-history glass-card">
-            <h3>Transaction History</h3>
-            <div className="history-table">
-              <div className="history-header">
-                <span>Date</span>
-                <span>Amount</span>
-                <span>Cost</span>
-                <span>Status</span>
-              </div>
-              {transactionHistory.map((tx, index) => (
-                <div className="history-row" key={index}>
-                  <span>{tx.timestamp.toLocaleString()}</span>
-                  <span>{tx.amount} AGX</span>
-                  <span>{tx.cost} SOL</span>
-                  <span className={`status-${tx.status}`}>{tx.status}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-      </section>
+      </main>
 
       <ToastContainer
         position="top-right"
