@@ -46,14 +46,10 @@ import "@solana/wallet-adapter-react-ui/styles.css";
 import "./App.css";
 
 // Constants
-const DECIMALS = 9;
-const TOTAL_SUPPLY = 2000000000;
 const AVAILABLE_FOR_PURCHASE = 800000000;
 const SOLD_TOKENS = 520000000;
 const PRICE_PER_TOKEN = 0.0375;
-const NEXT_PRICE = 0.075;
 const TOKEN_AUTHORITY = new PublicKey("ACF5o8USHkcexBrbuTL1KFsDhL44qyC3a9L1euW23hGP");
-const BONUS_PERCENTAGE = 15;
 
 interface TransactionHistory {
   txId: string;
@@ -61,6 +57,11 @@ interface TransactionHistory {
   cost: number;
   timestamp: Date;
   status: 'pending' | 'confirmed' | 'failed';
+}
+
+// Type guard for errors
+function isError(error: unknown): error is Error {
+  return error instanceof Error;
 }
 
 function WalletContent() {
@@ -103,13 +104,12 @@ function WalletContent() {
     return () => clearInterval(interval);
   }, []);
 
-  // Função para formatar números
   const formatNumber = (value: number | undefined, decimals: number = 4): string => {
     if (value === undefined || isNaN(value)) return '0'.padEnd(decimals + 2, '.0');
     return value.toFixed(decimals);
   };
 
-  // Carregar histórico do localStorage
+  // Load history from localStorage
   useEffect(() => {
     const savedHistory = localStorage.getItem('transactionHistory');
     if (savedHistory) {
@@ -127,14 +127,14 @@ function WalletContent() {
     }
   }, []);
 
-  // Salvar histórico no localStorage
+  // Save history to localStorage
   useEffect(() => {
     if (transactionHistory.length > 0) {
       localStorage.setItem('transactionHistory', JSON.stringify(transactionHistory));
     }
   }, [transactionHistory]);
 
-  // Verificar saldo de SOL
+  // Check SOL balance
   useEffect(() => {
     async function checkSolBalance() {
       if (publicKey) {
@@ -154,7 +154,7 @@ function WalletContent() {
     return () => clearInterval(interval);
   }, [connection, publicKey]);
 
-  // Verificar desconexão da wallet
+  // Check wallet disconnection
   useEffect(() => {
     if (!wallet) return;
 
@@ -169,7 +169,6 @@ function WalletContent() {
     };
   }, [wallet]);
 
-  // Reconectar wallet
   const reconnectWallet = async () => {
     toast.info("Reconnecting wallet...");
     try {
@@ -183,20 +182,18 @@ function WalletContent() {
     }
   };
 
-  // Enviar transação com tentativas
   const sendTransactionWithRetry = async (transaction: Transaction, maxAttempts = 3) => {
     let attempts = 0;
-    let lastError;
+    let lastError: unknown;
 
     while (attempts < maxAttempts) {
       try {
         const { blockhash, lastValidBlockHeight } = await connection.getLatestBlockhash();
         transaction.recentBlockhash = blockhash;
-        transaction.feePayer = publicKey;
+        transaction.feePayer = publicKey || undefined;
 
         const signature = await sendTransaction(transaction, connection);
 
-        // Adicionar ao histórico como pendente
         const newTx: TransactionHistory = {
           txId: signature,
           amount: amountToBuy,
@@ -208,14 +205,12 @@ function WalletContent() {
         setLastTransaction(signature);
         toast.info(`Transaction sent (${signature.slice(0, 6)}...)`);
 
-        // Aguardar confirmação
-        const confirmation = await connection.confirmTransaction({
+        await connection.confirmTransaction({
           signature,
           blockhash,
           lastValidBlockHeight,
         }, 'confirmed');
 
-        // Marcar como confirmado assim que a transação for confirmada na blockchain
         setTransactionHistory(prev => 
           prev.map(tx => 
             tx.txId === signature ? { ...tx, status: 'confirmed' } : tx
@@ -230,7 +225,7 @@ function WalletContent() {
         
         if (attempts < maxAttempts) {
           await new Promise(resolve => setTimeout(resolve, 1000 * attempts));
-          if (error.message.includes("disconnected") || error.message.includes("Not connected")) {
+          if (isError(error) && (error.message.includes("disconnected") || error.message.includes("Not connected"))) {
             await reconnectWallet();
           }
         }
@@ -239,7 +234,6 @@ function WalletContent() {
     throw lastError || new Error("Transaction failed after multiple attempts");
   };
 
-  // Função principal de compra
   const buyTokens = async () => {
     if (!wallet || !publicKey) {
       toast.warning("Please connect your wallet first");
@@ -254,7 +248,6 @@ function WalletContent() {
       }
     }
 
-    // Validações
     if (amountToBuy <= 0 || isNaN(amountToBuy)) {
       toast.error("Amount must be greater than zero");
       return;
@@ -298,25 +291,25 @@ function WalletContent() {
         <div style={{ fontSize: '0.9em', marginTop: '5px' }}>Tokens may take up to 24 hours to arrive</div>
       </div>);
 
-      // Atualizar saldo imediatamente
       const newBalance = await connection.getBalance(publicKey) / LAMPORTS_PER_SOL;
       setSolBalance(newBalance);
 
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Full error:", error);
 
       let errorMessage = "Transaction error";
-      if (error.message.includes("User rejected")) {
-        errorMessage = "User rejected the transaction";
-      } else if (error.message.includes("disconnected") || error.message.includes("Not connected")) {
-        errorMessage = "Wallet disconnected. Please try again.";
-      } else if (error.message.includes("Blockhash not found")) {
-        errorMessage = "Transaction expired. Please try again.";
+      if (isError(error)) {
+        if (error.message.includes("User rejected")) {
+          errorMessage = "User rejected the transaction";
+        } else if (error.message.includes("disconnected") || error.message.includes("Not connected")) {
+          errorMessage = "Wallet disconnected. Please try again.";
+        } else if (error.message.includes("Blockhash not found")) {
+          errorMessage = "Transaction expired. Please try again.";
+        }
       }
 
       toast.error(errorMessage);
 
-      // Marcar como falha no histórico
       if (lastTransaction) {
         setTransactionHistory(prev => 
           prev.map(tx => 
@@ -334,171 +327,163 @@ function WalletContent() {
 
   return (
     <div className="App">
-      {/* Presale Section */}
-<section id="presale" className="section">
-  <div className="presale-content modern-card">
-    {/* Header no topo */}
-    <div className="presale-header">
-      <h2 className="presale-title">Exclusive Opportunity AGX Token Presale</h2>
-      <WalletMultiButton className="wallet-connect-button" />
-    </div>
+      <section id="presale" className="section">
+        <div className="presale-content modern-card">
+          <div className="presale-header">
+            <h2 className="presale-title">Exclusive Opportunity AGX Token Presale</h2>
+            <WalletMultiButton className="wallet-connect-button" />
+          </div>
 
-    {/* Linha com Countdown abaixo do header */}
-    <div className="countdown-row">
-      <div className="countdown-modern">
-        <div className="timer-row">
-          <div className="timer-segment-modern">
-            <span className="timer-value">{timeLeft.days}</span>
-            <span className="timer-label">DAYS</span>
-          </div>
-          <div className="timer-segment-modern">
-            <span className="timer-value">{timeLeft.hours}</span>
-            <span className="timer-label">HOURS</span>
-          </div>
-          <div className="timer-segment-modern">
-            <span className="timer-value">{timeLeft.minutes}</span>
-            <span className="timer-label">MINUTES</span>
-          </div>
-          <div className="timer-segment-modern">
-            <span className="timer-value">{timeLeft.seconds}</span>
-            <span className="timer-label">SECONDS</span>
-          </div>
-        </div>
-      </div>
+          <div className="countdown-row">
+            <div className="countdown-modern">
+              <div className="timer-row">
+                <div className="timer-segment-modern">
+                  <span className="timer-value">{timeLeft.days}</span>
+                  <span className="timer-label">DAYS</span>
+                </div>
+                <div className="timer-segment-modern">
+                  <span className="timer-value">{timeLeft.hours}</span>
+                  <span className="timer-label">HOURS</span>
+                </div>
+                <div className="timer-segment-modern">
+                  <span className="timer-value">{timeLeft.minutes}</span>
+                  <span className="timer-label">MINUTES</span>
+                </div>
+                <div className="timer-segment-modern">
+                  <span className="timer-value">{timeLeft.seconds}</span>
+                  <span className="timer-label">SECONDS</span>
+                </div>
+              </div>
+            </div>
 
-      {/* Barra de progresso abaixo do countdown */}
-      <div className="progress-container">
-        <div className="progress-bar" style={{ width: `${progressPercentage}%` }}></div>
-        <span className="progress-text">0% Complete</span> {/* se quiser voltar pro percentual > {Math.round(progressPercentage)} <*/}
-      </div>
-    </div>
+            <div className="progress-container">
+              <div className="progress-bar" style={{ width: `${progressPercentage}%` }}></div>
+              <span className="progress-text">0% Complete</span>
+            </div>
+          </div>
 
-    {/* Grid com 2 colunas */}
-    <div className="presale-columns">
-      {/* Coluna da esquerda - Stats */}
-      <div className="stats-column">
-        <div className="stats-modern">
-          <div className="stat-item-modern">
-            <span className="stat-label">TOTAL SUPPLY</span>
-            <span className="stat-value">2,000,000,000 AGX</span>
-          </div>
-          <div className="stat-item-modern">
-            <span className="stat-label">PRESALE AVAILABLE</span>
-            <span className="stat-value">800,000,000 AGX</span>
-          </div>
-          <div className="stat-item-modern">
-            <span className="stat-label">TOKEN PRICE</span>
-            <span className="stat-value">0.0375 SOL (next price 0.075)</span>
-          </div>
-          <div className="stat-item-modern">
-            <span className="stat-label">SOLD</span>
-            <span className="stat-value">0 AGX</span>
-          </div>
-          <div className="stat-item-modern">
-            <span className="stat-label">RAISED</span>
-            <span className="stat-value">0 SOL</span>
-          </div>
-          <div className="stat-item-modern">
-            <span className="stat-label">CURRENT PHASE</span>
-            <span className="stat-value highlight">ROUND 1 OF 7</span>
-          </div>
-        </div>
-      </div>
+          <div className="presale-columns">
+            <div className="stats-column">
+              <div className="stats-modern">
+                <div className="stat-item-modern">
+                  <span className="stat-label">TOTAL SUPPLY</span>
+                  <span className="stat-value">2,000,000,000 AGX</span>
+                </div>
+                <div className="stat-item-modern">
+                  <span className="stat-label">PRESALE AVAILABLE</span>
+                  <span className="stat-value">800,000,000 AGX</span>
+                </div>
+                <div className="stat-item-modern">
+                  <span className="stat-label">TOKEN PRICE</span>
+                  <span className="stat-value">0.0375 SOL (next price 0.075)</span>
+                </div>
+                <div className="stat-item-modern">
+                  <span className="stat-label">SOLD</span>
+                  <span className="stat-value">0 AGX</span>
+                </div>
+                <div className="stat-item-modern">
+                  <span className="stat-label">RAISED</span>
+                  <span className="stat-value">0 SOL</span>
+                </div>
+                <div className="stat-item-modern">
+                  <span className="stat-label">CURRENT PHASE</span>
+                  <span className="stat-value highlight">ROUND 1 OF 7</span>
+                </div>
+              </div>
+            </div>
 
-      {/* Coluna da direita - Purchase */}
-      <div className="purchase-column">
-        <div className="purchase-modern">
-          <div className="amount-selector">
-            <label>SELECT AMOUNT (AGX)</label>
-            <div className="amount-input">
-              <input
-                type="number"
-                value={amountToBuy}
-                onChange={(e) => setAmountToBuy(Number(e.target.value))}
-                min={1000}
-                step={1000}
-              />
-              <div className="quick-buttons">
-                <button onClick={() => setAmountToBuy(1000)}>1K</button>
-                <button onClick={() => setAmountToBuy(5000)}>5K</button>
-                <button onClick={() => setAmountToBuy(10000)}>10K</button>
-                <button onClick={() => setAmountToBuy(50000)}>50K</button>
+            <div className="purchase-column">
+              <div className="purchase-modern">
+                <div className="amount-selector">
+                  <label>SELECT AMOUNT (AGX)</label>
+                  <div className="amount-input">
+                    <input
+                      type="number"
+                      value={amountToBuy}
+                      onChange={(e) => setAmountToBuy(Number(e.target.value))}
+                      min={1000}
+                      step={1000}
+                    />
+                    <div className="quick-buttons">
+                      <button onClick={() => setAmountToBuy(1000)}>1K</button>
+                      <button onClick={() => setAmountToBuy(5000)}>5K</button>
+                      <button onClick={() => setAmountToBuy(10000)}>10K</button>
+                      <button onClick={() => setAmountToBuy(50000)}>50K</button>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="summary-modern">
+                  <div className="summary-row">
+                    <span>YOU WILL RECEIVE:</span>
+                    <span>{amountToBuy.toLocaleString()} AGX</span>
+                  </div>
+                  <div className="summary-row">
+                    <span>TOTAL COST:</span>
+                    <span>{formatNumber(totalCost)} SOL</span>
+                  </div>
+                  <div className="summary-row">
+                    <span>YOUR SOL BALANCE:</span>
+                    <span>{formatNumber(solBalance)} SOL</span>
+                  </div>
+                  <div className="summary-row highlight">
+                    <span>CURRENT BONUS:</span>
+                    <span>+15% EXTRA TOKENS</span>
+                  </div>
+                </div>
+
+                <button
+                  className="buy-button-modern"
+                  onClick={buyTokens}
+                  disabled={loading || !connected || totalCost > solBalance}
+                >
+                  {loading ? (
+                    <span className="spinner"></span>
+                  ) : connected ? (
+                    totalCost > solBalance ? "INSUFFICIENT SOL BALANCE" : "PURCHASE AGX TOKENS"
+                  ) : (
+                    "CONNECT WALLET TO PURCHASE"
+                  )}
+                </button>
+
+                <div className="disclaimer">
+                  <p>Tokens will be distributed after the presale concludes. Bonus tokens will be automatically credited.</p>
+                </div>
               </div>
             </div>
           </div>
-
-          <div className="summary-modern">
-            <div className="summary-row">
-              <span>YOU WILL RECEIVE:</span>
-              <span>{amountToBuy.toLocaleString()} AGX</span>
-            </div>
-            <div className="summary-row">
-              <span>TOTAL COST:</span>
-              <span>{formatNumber(totalCost)} SOL</span>
-            </div>
-            <div className="summary-row">
-              <span>YOUR SOL BALANCE:</span>
-              <span>{formatNumber(solBalance)} SOL</span>
-            </div>
-            <div className="summary-row highlight">
-              <span>CURRENT BONUS:</span>
-              <span>+15% EXTRA TOKENS</span>
-            </div>
-          </div>
-
-          <button
-            className="buy-button-modern"
-            onClick={buyTokens}
-            disabled={loading || !connected || totalCost > solBalance}
-          >
-            {loading ? (
-              <span className="spinner"></span>
-            ) : connected ? (
-              totalCost > solBalance ? "INSUFFICIENT SOL BALANCE" : "PURCHASE AGX TOKENS"
-            ) : (
-              "CONNECT WALLET TO PURCHASE"
-            )}
-          </button>
-
-          <div className="disclaimer">
-            <p>Tokens will be distributed after the presale concludes. Bonus tokens will be automatically credited.</p>
-          </div>
         </div>
-      </div>
-    </div>
-  </div>
 
-  {/* Transaction History (mantido igual) */}
-  {lastTransaction && (
-    <div className="transaction-details glass-card">
-      <h3>Last Transaction</h3>
-      <p>ID {lastTransaction.slice(0, 8)}...{lastTransaction.slice(-8)}</p>
-      <p>Status: {transactionHistory.find(tx => tx.txId === lastTransaction)?.status || 'pending'}</p>
-    </div>
-  )}
-
-  {transactionHistory.length > 0 && (
-    <div className="transaction-history glass-card">
-      <h3>Transaction History</h3>
-      <div className="history-table">
-        <div className="history-header">
-          <span>Date</span>
-          <span>Amount</span>
-          <span>Cost</span>
-          <span>Status</span>
-        </div>
-        {transactionHistory.map((tx, index) => (
-          <div className="history-row" key={index}>
-            <span>{tx.timestamp.toLocaleString()}</span>
-            <span>{tx.amount} AGX</span>
-            <span>{tx.cost} SOL</span>
-            <span className={`status-${tx.status}`}>{tx.status}</span>
+        {lastTransaction && (
+          <div className="transaction-details glass-card">
+            <h3>Last Transaction</h3>
+            <p>ID {lastTransaction.slice(0, 8)}...{lastTransaction.slice(-8)}</p>
+            <p>Status: {transactionHistory.find(tx => tx.txId === lastTransaction)?.status || 'pending'}</p>
           </div>
-        ))}
-      </div>
-    </div>
-  )}
-</section>
+        )}
+
+        {transactionHistory.length > 0 && (
+          <div className="transaction-history glass-card">
+            <h3>Transaction History</h3>
+            <div className="history-table">
+              <div className="history-header">
+                <span>Date</span>
+                <span>Amount</span>
+                <span>Cost</span>
+                <span>Status</span>
+              </div>
+              {transactionHistory.map((tx, index) => (
+                <div className="history-row" key={index}>
+                  <span>{tx.timestamp.toLocaleString()}</span>
+                  <span>{tx.amount} AGX</span>
+                  <span>{tx.cost} SOL</span>
+                  <span className={`status-${tx.status}`}>{tx.status}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </section>
 
       <ToastContainer
         position="top-right"
