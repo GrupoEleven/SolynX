@@ -1,14 +1,25 @@
 import "./polyfills";
 import { Buffer } from "buffer";
-window.Buffer = Buffer;
-
-import React, { useMemo } from "react";
-import ReactDOM from "react-dom/client";
+import { AppRegistry } from "react-native";
+import React from "react";
 import App from "./App";
-import "./index.css";
 import MWAApp from "./MWAApp";
+import { name as appName } from "./app.json";
 
-// Web imports
+// Polyfills
+window.Buffer = Buffer;
+window.addEventListener = () => {};
+window.removeEventListener = () => {};
+
+// Mobile specific imports
+import {
+  MWARequest,
+  MWASessionEvent,
+  MobileWalletAdapterConfig,
+  useMobileWalletAdapterSession,
+} from "@solana-mobile/mobile-wallet-adapter-protocol";
+
+// Web specific imports 
 import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
 import { ConnectionProvider, WalletProvider } from "@solana/wallet-adapter-react";
 import { WalletModalProvider } from "@solana/wallet-adapter-react-ui";
@@ -16,18 +27,19 @@ import { clusterApiUrl } from "@solana/web3.js";
 
 // Default styles
 import "@solana/wallet-adapter-react-ui/styles.css";
+import "./index.css";
 
 function Main() {
-  const network = WalletAdapterNetwork.Devnet;
-  const endpoint = useMemo(() => clusterApiUrl(network), [network]);
-  const wallets = useMemo(() => [], [network]);
-
   // Check if we're running on mobile
   const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
     navigator.userAgent
   );
 
   if (isMobile) {
+    // Register mobile components
+    AppRegistry.registerComponent(appName, () => App);
+    AppRegistry.registerComponent("MobileWalletAdapterEntrypoint", () => MWAApp);
+    
     return (
       <React.StrictMode>
         <MWAApp />
@@ -35,7 +47,11 @@ function Main() {
     );
   }
 
-  // Web version with providers
+  // Web version setup
+  const network = WalletAdapterNetwork.Devnet;
+  const endpoint = clusterApiUrl(network);
+  const wallets = [];
+
   return (
     <React.StrictMode>
       <ConnectionProvider endpoint={endpoint}>
@@ -49,4 +65,10 @@ function Main() {
   );
 }
 
-ReactDOM.createRoot(document.getElementById("root")!).render(<Main />);
+// For web
+if (!isMobile) {
+  ReactDOM.createRoot(document.getElementById("root")!).render(<Main />);
+}
+
+// For mobile
+export default Main;
