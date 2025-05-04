@@ -426,12 +426,6 @@ function WalletContent() {
                       min={1000}
                       step={1000}
                     />
-                    <div className="quick-buttons">
-                      <button onClick={() => setAmountToBuy(1000)}>1K</button>
-                      <button onClick={() => setAmountToBuy(5000)}>5K</button>
-                      <button onClick={() => setAmountToBuy(10000)}>10K</button>
-                      <button onClick={() => setAmountToBuy(50000)}>50K</button>
-                    </div>
                   </div>
                 </div>
 
