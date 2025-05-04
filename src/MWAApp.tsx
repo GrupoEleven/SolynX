@@ -1,13 +1,7 @@
-import { useCallback, useMemo, useState } from "react";
-import { Text, View } from "react-native-web";
-import {
-  transact,
-  Web3MobileWallet,
-} from '@solana-mobile/mobile-wallet-adapter-protocol';
-import {
-  AuthorizationResult,
-  AuthToken
-} from '@solana-mobile/mobile-wallet-adapter-protocol';
+import { useState } from "react";
+import { Text, View, TouchableOpacity } from "react-native-web";
+import { transact } from '@solana-mobile/mobile-wallet-adapter-protocol';
+import type { AuthToken, MobileWallet } from '@solana-mobile/mobile-wallet-adapter-protocol';
 
 function MWAApp() {
   const [authToken, setAuthToken] = useState<AuthToken | null>(null);
@@ -19,7 +13,7 @@ function MWAApp() {
 
   const handleConnect = async () => {
     try {
-      await transact(async (wallet: Web3MobileWallet) => {
+      await transact(async (wallet: MobileWallet) => {
         const authResult = await wallet.authorize({
           cluster: "devnet",
           identity: APP_IDENTITY,
@@ -34,7 +28,9 @@ function MWAApp() {
   return (
     <View>
       <Text>Mobile Wallet Connection Test</Text>
-      <button onClick={handleConnect}>Connect Wallet</button>
+      <TouchableOpacity onPress={handleConnect}>
+        <Text>Connect Wallet</Text>
+      </TouchableOpacity>
     </View>
   );
 }
