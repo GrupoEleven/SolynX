@@ -6,7 +6,9 @@ import React, { useMemo } from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
 import "./index.css";
+import MWAApp from "./MWAApp";
 
+// Web imports
 import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
 import { ConnectionProvider, WalletProvider } from "@solana/wallet-adapter-react";
 import { WalletModalProvider } from "@solana/wallet-adapter-react-ui";
@@ -20,6 +22,20 @@ function Main() {
   const endpoint = useMemo(() => clusterApiUrl(network), [network]);
   const wallets = useMemo(() => [], [network]);
 
+  // Check if we're running on mobile
+  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+    navigator.userAgent
+  );
+
+  if (isMobile) {
+    return (
+      <React.StrictMode>
+        <MWAApp />
+      </React.StrictMode>
+    );
+  }
+
+  // Web version with providers
   return (
     <React.StrictMode>
       <ConnectionProvider endpoint={endpoint}>
