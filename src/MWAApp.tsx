@@ -24,14 +24,28 @@ function MWAApp() {
       maxMessagesPerSigningRequest: 10,
       supportedTransactionVersions: [0, "legacy"],
       noConnectionWarningTimeoutMs: 3000,
+      optionalFeatures: {}
     };
   }, []);
 
-  const handleRequest = useCallback((request: MWARequest) => {}, []);
-  const handleSessionEvent = useCallback(
-    (sessionEvent: MWASessionEvent) => {},
-    [],
-  );
+  const handleRequest = useCallback((request: MWARequest) => {
+    if (request.__type === MWARequestType.ReauthorizeDappRequest) {
+      resolve(request, {
+        authorizationScope: new TextEncoder().encode("app"),
+      });
+    }
+  }, []);
+  
+  
+  
+  
+  const handleSessionEvent = useCallback((sessionEvent: MWASessionEvent) => {
+    if (sessionEvent.__type === MWASessionEventType.SessionTerminatedEvent) {
+      setTimeout(() => {
+        BackHandler.exitApp();
+      }, 200);
+    }
+  }, []);
 
   useMobileWalletAdapterSession(
     "React Native Fake Wallet",
