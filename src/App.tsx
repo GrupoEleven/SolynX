@@ -343,43 +343,7 @@ function WalletContent() {
       </header>
 
       <main className="main-content">
-        <div className="left-side">
-          <div className="token-details">
-            <h2>CURRENT PHASE
-            ROUND: 1 OF 7</h2>
-            <div className="detail-item">
-              <span>	10 de Maio a 17 de Maio:	</span>
-              <span>$0,0375</span>
-            </div>
-            <div className="detail-item">
-              <span>	18 de Maio a 25 de Maio:</span>
-              <span>$0,075</span>
-            </div>
-            <div className="detail-item">
-              <span>	26 de Maio a 2 de junho:</span>
-             <p>$0,15</p>
-            </div>
-            <div>
-            <p className="detail-item">3 de junho a 10 de junho: 
-            <p></p>$0,30</p>
-            <p className="detail-item">11 de junho a 18 de junho:
-            <p></p>$0,60</p>
-            <p className="detail-item">19 de junho a 26 de junho:
-            <p></p>$1,20</p> 
-            <p className="detail-item">
-            <p></p></p>
-           
-           </div>
-           
-            <div className="detail-itemm">
-              <p>	27 de junho a 3 de julho: </p>
-                <p className="detail-itemmm">$2,40</p>
-            </div>
-            <div className="detail-item">
-            </div>
-          </div>
-        </div>
-
+       
         <div className="right-side">
           <section id="presale" className="section">
             <div className="presale-content modern-card">
