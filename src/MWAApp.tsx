@@ -4,9 +4,9 @@ import { WalletProvider } from "./components/WalletProvider";
 import {
   MWARequest,
   MWASessionEvent,
-  MobileWalletAdapterConfig, 
+  MobileWalletAdapterConfig,
   useMobileWalletAdapterSession,
-} from "@solana-mobile/mobile-wallet-adapter-protocol";
+} from "./lib/mobile-wallet-adapter-walletlib/src";  // Changed this import path
 
 const styles = StyleSheet.create({
   container: {

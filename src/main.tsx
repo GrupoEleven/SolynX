@@ -6,69 +6,36 @@ import App from "./App";
 import MWAApp from "./MWAApp";
 import { name as appName } from "./app.json";
 
-// Polyfills
+// Polyfills required for mobile wallet adapter
 window.Buffer = Buffer;
 window.addEventListener = () => {};
 window.removeEventListener = () => {};
 
-// Mobile specific imports
+// Import wallet adapter components
 import {
   MWARequest,
   MWASessionEvent,
   MobileWalletAdapterConfig,
-  useMobileWalletAdapterSession,
-} from "@solana-mobile/mobile-wallet-adapter-protocol";
+  useMobileWalletAdapterSession
+} from "@solana-mobile/mobile-wallet-adapter-walletlib";
 
-// Web specific imports 
-import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
-import { ConnectionProvider, WalletProvider } from "@solana/wallet-adapter-react";
-import { WalletModalProvider } from "@solana/wallet-adapter-react-ui";
-import { clusterApiUrl } from "@solana/web3.js";
-
-// Default styles
-import "@solana/wallet-adapter-react-ui/styles.css";
-import "./index.css";
+// Import React-DOM
+import { createRoot } from 'react-dom/client';
 
 function Main() {
-  // Check if we're running on mobile
-  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-    navigator.userAgent
-  );
-
-  if (isMobile) {
-    // Register mobile components
-    AppRegistry.registerComponent(appName, () => App);
-    AppRegistry.registerComponent("MobileWalletAdapterEntrypoint", () => MWAApp);
-    
-    return (
-      <React.StrictMode>
-        <MWAApp />
-      </React.StrictMode>
-    );
-  }
-
-  // Web version setup
-  const network = WalletAdapterNetwork.Devnet;
-  const endpoint = clusterApiUrl(network);
-  const wallets = [];
-
+  // Register the required components for Mobile Wallet Adapter
+  AppRegistry.registerComponent(appName, () => App);
+  AppRegistry.registerComponent("MobileWalletAdapterEntrypoint", () => MWAApp);
+  
   return (
     <React.StrictMode>
-      <ConnectionProvider endpoint={endpoint}>
-        <WalletProvider wallets={wallets} autoConnect>
-          <WalletModalProvider>
-            <App />
-          </WalletModalProvider>
-        </WalletProvider>
-      </ConnectionProvider>
+      <MWAApp />
     </React.StrictMode>
   );
 }
 
-// For web
-if (!isMobile) {
-  ReactDOM.createRoot(document.getElementById("root")!).render(<Main />);
-}
+// Mount the app
+const root = createRoot(document.getElementById('root')!);
+root.render(<Main />);
 
-// For mobile
 export default Main;

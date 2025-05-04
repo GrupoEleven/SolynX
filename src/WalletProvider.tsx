@@ -1,12 +1,13 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Connection, Keypair } from "@solana/web3.js";
-import { encode, decode } from "bs58";
+import bs58 from 'bs58';  // Changed this line
 import {
   ReactNode,
   createContext,
   useContext,
   useEffect,
   useState,
+  useMemo,  // Added this import
 } from "react";
 
 const ASYNC_STORAGE_KEY = "@my_fake_wallet_keypair_key";
@@ -19,12 +20,12 @@ interface EncodedKeypair {
 function encodeKeypair(keypair: Keypair): EncodedKeypair {
   return {
     publicKeyBase58: keypair.publicKey.toBase58(),
-    secretKeyBase58: encode(keypair.secretKey),
+    secretKeyBase58: bs58.encode(keypair.secretKey),  // Changed to bs58.encode
   };
 }
 
 function decodeKeypair(encodedKeypair: EncodedKeypair): Keypair {
-  const secretKey = decode(encodedKeypair.secretKeyBase58);
+  const secretKey = bs58.decode(encodedKeypair.secretKeyBase58);  // Changed to bs58.decode
   return Keypair.fromSecretKey(secretKey);
 }
 
