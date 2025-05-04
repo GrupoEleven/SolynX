@@ -88,3 +88,4 @@ export function WalletProvider(props: WalletProviderProps) {
     <WalletContext.Provider value={value}>{children}</WalletContext.Provider>
   );
 }
+

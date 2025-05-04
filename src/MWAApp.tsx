@@ -6,8 +6,7 @@ import {
   MWASessionEvent,
   MobileWalletAdapterConfig,
   useMobileWalletAdapterSession,
-} from "./lib/mobile-wallet-adapter-walletlib/src";  // Changed this import path
-
+} from "@solana-mobile/mobile-wallet-adapter-walletlib";
 const styles = StyleSheet.create({
   container: {
     margin: 0,
