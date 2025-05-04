@@ -1,12 +1,36 @@
-import { AppRegistry } from "react-native";
+import "./polyfills";
+import { Buffer } from "buffer";
+window.Buffer = Buffer;
+
+import React, { useMemo } from "react";
+import ReactDOM from "react-dom/client";
 import App from "./App";
-import { name as appName } from "./app.json";
-import MWAApp from "./MWAApp";
+import "./index.css";
 
-// Mock event listener functions to prevent them from fataling.
-window.addEventListener = () => {};
-window.removeEventListener = () => {};
+import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
+import { ConnectionProvider, WalletProvider } from "@solana/wallet-adapter-react";
+import { WalletModalProvider } from "@solana/wallet-adapter-react-ui";
+import { clusterApiUrl } from "@solana/web3.js";
 
-AppRegistry.registerComponent(appName, () => App);
-// Register the MWA component
-AppRegistry.registerComponent("MobileWalletAdapterEntrypoint", () => MWAApp);
+// Default styles
+import "@solana/wallet-adapter-react-ui/styles.css";
+
+function Main() {
+  const network = WalletAdapterNetwork.Devnet;
+  const endpoint = useMemo(() => clusterApiUrl(network), [network]);
+  const wallets = useMemo(() => [], [network]);
+
+  return (
+    <React.StrictMode>
+      <ConnectionProvider endpoint={endpoint}>
+        <WalletProvider wallets={wallets} autoConnect>
+          <WalletModalProvider>
+            <App />
+          </WalletModalProvider>
+        </WalletProvider>
+      </ConnectionProvider>
+    </React.StrictMode>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")!).render(<Main />);
