@@ -19,8 +19,24 @@ import {
   ComputeBudgetProgram
 } from "@solana/web3.js";
 
-// Only import Phantom wallet adapter
+// Wallet adapters
 import { PhantomWalletAdapter } from '@solana/wallet-adapter-phantom';
+import { SolflareWalletAdapter } from '@solana/wallet-adapter-solflare';
+import { BackpackWalletAdapter } from '@solana/wallet-adapter-backpack';
+import { GlowWalletAdapter } from '@solana/wallet-adapter-glow';
+import { BraveWalletAdapter } from '@solana/wallet-adapter-brave';
+import { CoinbaseWalletAdapter } from '@solana/wallet-adapter-coinbase';
+import { MathWalletAdapter } from '@solana/wallet-adapter-mathwallet';
+import { TokenPocketWalletAdapter } from '@solana/wallet-adapter-tokenpocket';
+import { TrustWalletAdapter } from '@solana/wallet-adapter-trust';
+import { ExodusWalletAdapter } from '@solana/wallet-adapter-exodus';
+import { LedgerWalletAdapter } from '@solana/wallet-adapter-ledger';
+import { SafePalWalletAdapter } from '@solana/wallet-adapter-safepal';
+import { CloverWalletAdapter } from '@solana/wallet-adapter-clover';
+import { BitpieWalletAdapter } from '@solana/wallet-adapter-bitpie';
+import { Coin98WalletAdapter } from '@solana/wallet-adapter-coin98';
+import { HuobiWalletAdapter } from '@solana/wallet-adapter-huobi';
+import { SpotWalletAdapter } from '@solana/wallet-adapter-spot';
 
 // Toast notifications
 import { ToastContainer, toast } from 'react-toastify';
@@ -43,6 +59,7 @@ interface TransactionHistory {
   status: 'pending' | 'confirmed' | 'failed';
 }
 
+// Type guard for errors
 function isError(error: unknown): error is Error {
   return error instanceof Error;
 }
@@ -62,6 +79,7 @@ function WalletContent() {
     seconds: 0
   });
 
+  // Simulate countdown timer (7 days from now)
   useEffect(() => {
     const endDate = new Date();
     endDate.setDate(endDate.getDate() + 7);
@@ -91,6 +109,7 @@ function WalletContent() {
     return value.toFixed(decimals);
   };
 
+  // Load history from localStorage
   useEffect(() => {
     const savedHistory = localStorage.getItem('transactionHistory');
     if (savedHistory) {
@@ -108,12 +127,14 @@ function WalletContent() {
     }
   }, []);
 
+  // Save history to localStorage
   useEffect(() => {
     if (transactionHistory.length > 0) {
       localStorage.setItem('transactionHistory', JSON.stringify(transactionHistory));
     }
   }, [transactionHistory]);
 
+  // Check SOL balance
   useEffect(() => {
     async function checkSolBalance() {
       if (publicKey) {
@@ -133,6 +154,7 @@ function WalletContent() {
     return () => clearInterval(interval);
   }, [connection, publicKey]);
 
+  // Check wallet disconnection
   useEffect(() => {
     if (!wallet) return;
 
@@ -321,6 +343,43 @@ function WalletContent() {
       </header>
 
       <main className="main-content">
+        <div className="left-side">
+          <div className="token-details">
+            <h2>CURRENT PHASE
+            ROUND: 1 OF 7</h2>
+            <div className="detail-item">
+              <span>	10 de Maio a 17 de Maio:	</span>
+              <span>$0,0375</span>
+            </div>
+            <div className="detail-item">
+              <span>	18 de Maio a 25 de Maio:</span>
+              <span>$0,075</span>
+            </div>
+            <div className="detail-item">
+              <span>	26 de Maio a 2 de junho:</span>
+             <p>$0,15</p>
+            </div>
+            <div>
+            <p className="detail-item">3 de junho a 10 de junho: 
+            <p></p>$0,30</p>
+            <p className="detail-item">11 de junho a 18 de junho:
+            <p></p>$0,60</p>
+            <p className="detail-item">19 de junho a 26 de junho:
+            <p></p>$1,20</p> 
+            <p className="detail-item">
+            <p></p></p>
+           
+           </div>
+           
+            <div className="detail-itemm">
+              <p>	27 de junho a 3 de julho: </p>
+                <p className="detail-itemmm">$2,40</p>
+            </div>
+            <div className="detail-item">
+            </div>
+          </div>
+        </div>
+
         <div className="right-side">
           <section id="presale" className="section">
             <div className="presale-content modern-card">
@@ -367,6 +426,12 @@ function WalletContent() {
                       min={1000}
                       step={1000}
                     />
+                    <div className="quick-buttons">
+                      <button onClick={() => setAmountToBuy(1000)}>1K</button>
+                      <button onClick={() => setAmountToBuy(5000)}>5K</button>
+                      <button onClick={() => setAmountToBuy(10000)}>10K</button>
+                      <button onClick={() => setAmountToBuy(50000)}>50K</button>
+                    </div>
                   </div>
                 </div>
 
@@ -404,7 +469,7 @@ function WalletContent() {
                 </button>
 
                 <div className="disclaimer">
-                  <p>Tkens will be distributed after the presale concludes. Bonus tokens will be automatically credited.</p>
+                  <p>Tokens will be distributed after the presale concludes. Bonus tokens will be automatically credited.</p>
                 </div>
               </div>
             </div>
@@ -432,10 +497,25 @@ function App() {
   const network = WalletAdapterNetwork.Devnet;
   const endpoint = useMemo(() => clusterApiUrl(network), [network]);
 
-  // Only use Phantom wallet adapter
   const wallets = useMemo(
     () => [
-      new PhantomWalletAdapter()
+      new PhantomWalletAdapter(),
+      new SolflareWalletAdapter(),
+      new BackpackWalletAdapter(),
+      new GlowWalletAdapter(),
+      new BraveWalletAdapter(),
+      new CoinbaseWalletAdapter(),
+      new MathWalletAdapter(),
+      new TokenPocketWalletAdapter(),
+      new TrustWalletAdapter(),
+      new ExodusWalletAdapter(),
+      new LedgerWalletAdapter(),
+      new SafePalWalletAdapter(),
+      new CloverWalletAdapter(),
+      new BitpieWalletAdapter(),
+      new Coin98WalletAdapter(),
+      new HuobiWalletAdapter(),
+      new SpotWalletAdapter(),   
     ],
     [network]
   );
