@@ -699,7 +699,7 @@ function WalletContent() {
       {/* Purchase Section */}
       <div className="purchase-modern">
         <div className="amount-selector">
-          <label>SELECT AMOUNT (SYX)</label>
+          <label>SELECT AMOUNTT (SYX)</label>
           <div className="amount-input">
             <input
               type="number"
