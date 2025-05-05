@@ -404,7 +404,7 @@ function WalletContent() {
                 </button>
 
                 <div className="disclaimer">
-                  <p>Tokens will be distributed after the presale concludes. Bonus tokens will be automatically credited.</p>
+                  <p>Tkens will be distributed after the presale concludes. Bonus tokens will be automatically credited.</p>
                 </div>
               </div>
             </div>
