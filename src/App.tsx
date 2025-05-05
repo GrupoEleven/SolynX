@@ -19,24 +19,8 @@ import {
   ComputeBudgetProgram
 } from "@solana/web3.js";
 
-// Wallet adapters
+// Only import Phantom wallet adapter
 import { PhantomWalletAdapter } from '@solana/wallet-adapter-phantom';
-import { SolflareWalletAdapter } from '@solana/wallet-adapter-solflare';
-import { BackpackWalletAdapter } from '@solana/wallet-adapter-backpack';
-import { GlowWalletAdapter } from '@solana/wallet-adapter-glow';
-import { BraveWalletAdapter } from '@solana/wallet-adapter-brave';
-import { CoinbaseWalletAdapter } from '@solana/wallet-adapter-coinbase';
-import { MathWalletAdapter } from '@solana/wallet-adapter-mathwallet';
-import { TokenPocketWalletAdapter } from '@solana/wallet-adapter-tokenpocket';
-import { TrustWalletAdapter } from '@solana/wallet-adapter-trust';
-import { ExodusWalletAdapter } from '@solana/wallet-adapter-exodus';
-import { LedgerWalletAdapter } from '@solana/wallet-adapter-ledger';
-import { SafePalWalletAdapter } from '@solana/wallet-adapter-safepal';
-import { CloverWalletAdapter } from '@solana/wallet-adapter-clover';
-import { BitpieWalletAdapter } from '@solana/wallet-adapter-bitpie';
-import { Coin98WalletAdapter } from '@solana/wallet-adapter-coin98';
-import { HuobiWalletAdapter } from '@solana/wallet-adapter-huobi';
-import { SpotWalletAdapter } from '@solana/wallet-adapter-spot';
 
 // Toast notifications
 import { ToastContainer, toast } from 'react-toastify';
@@ -59,7 +43,6 @@ interface TransactionHistory {
   status: 'pending' | 'confirmed' | 'failed';
 }
 
-// Type guard for errors
 function isError(error: unknown): error is Error {
   return error instanceof Error;
 }
@@ -79,7 +62,6 @@ function WalletContent() {
     seconds: 0
   });
 
-  // Simulate countdown timer (7 days from now)
   useEffect(() => {
     const endDate = new Date();
     endDate.setDate(endDate.getDate() + 7);
@@ -109,7 +91,6 @@ function WalletContent() {
     return value.toFixed(decimals);
   };
 
-  // Load history from localStorage
   useEffect(() => {
     const savedHistory = localStorage.getItem('transactionHistory');
     if (savedHistory) {
@@ -127,14 +108,12 @@ function WalletContent() {
     }
   }, []);
 
-  // Save history to localStorage
   useEffect(() => {
     if (transactionHistory.length > 0) {
       localStorage.setItem('transactionHistory', JSON.stringify(transactionHistory));
     }
   }, [transactionHistory]);
 
-  // Check SOL balance
   useEffect(() => {
     async function checkSolBalance() {
       if (publicKey) {
@@ -154,7 +133,6 @@ function WalletContent() {
     return () => clearInterval(interval);
   }, [connection, publicKey]);
 
-  // Check wallet disconnection
   useEffect(() => {
     if (!wallet) return;
 
@@ -343,7 +321,6 @@ function WalletContent() {
       </header>
 
       <main className="main-content">
-       
         <div className="right-side">
           <section id="presale" className="section">
             <div className="presale-content modern-card">
@@ -455,25 +432,10 @@ function App() {
   const network = WalletAdapterNetwork.Devnet;
   const endpoint = useMemo(() => clusterApiUrl(network), [network]);
 
+  // Only use Phantom wallet adapter
   const wallets = useMemo(
     () => [
-      new PhantomWalletAdapter(),
-      new SolflareWalletAdapter(),
-      new BackpackWalletAdapter(),
-      new GlowWalletAdapter(),
-      new BraveWalletAdapter(),
-      new CoinbaseWalletAdapter(),
-      new MathWalletAdapter(),
-      new TokenPocketWalletAdapter(),
-      new TrustWalletAdapter(),
-      new ExodusWalletAdapter(),
-      new LedgerWalletAdapter(),
-      new SafePalWalletAdapter(),
-      new CloverWalletAdapter(),
-      new BitpieWalletAdapter(),
-      new Coin98WalletAdapter(),
-      new HuobiWalletAdapter(),
-      new SpotWalletAdapter(),   
+      new PhantomWalletAdapter()
     ],
     [network]
   );
