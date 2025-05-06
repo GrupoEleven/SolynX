@@ -1929,7 +1929,7 @@ margin-left: 3%;
 .purchase-modern {
 
  
-  margin-left: -45.1%;
+  margin-left: -70%;
   margin-top: 1%;
 
     }
@@ -1939,7 +1939,7 @@ margin-left: 3%;
       position: relative;
       top: -60px; /* número negativo = sobe */
       
-        padding: 4rem;                /* Menos espaço interno */
+        padding: 2rem;                /* Menos espaço interno */
         font-size: 0.9rem;            /* Texto um pouco menor */
         transform: scale(0.95);       /* Diminui o tamanho geral em 5% */
         transition: transform 0.3s ease;
