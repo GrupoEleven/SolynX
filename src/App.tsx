@@ -385,7 +385,6 @@ function WalletContent() {
 <section id="presale" className="section">
   <div className="presale-content modern-card">
     <div className="presale-header">
-      <h2 className="presale-title">Exclusive Opportunity ASY Token Presale</h2>
       <div className="progress-container">
         <div className="progress-bar" style={{ width: '65%' }}></div>
       
