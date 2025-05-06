@@ -1945,5 +1945,7 @@ margin-left: 3%;
         transition: transform 0.3s ease;
         max-width: 500px;             /* Limita a largura */
         margin:2rem auto;            /* Centraliza e dá espaço em volta */
+        margin-right: 30%;
       }
+
 
