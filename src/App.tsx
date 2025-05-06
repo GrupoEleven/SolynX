@@ -1,137 +1,713 @@
-import { useEffect, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import {
-  Connection,
+  ConnectionProvider,
+  WalletProvider,
+  useConnection,
+  useWallet
+} from "@solana/wallet-adapter-react";
+import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
+import {
+  WalletModalProvider,
+  WalletMultiButton
+} from "@solana/wallet-adapter-react-ui";
+import {
+  clusterApiUrl,
   PublicKey,
   Transaction,
-  SystemProgram,
-  clusterApiUrl,
   LAMPORTS_PER_SOL,
+  SystemProgram,
+  ComputeBudgetProgram
 } from "@solana/web3.js";
 
-const NETWORK = "devnet";
-const RPC_URL = clusterApiUrl(NETWORK);
-const RECEIVER_WALLET = new PublicKey("ACF5o8USHkcexBrbuTL1KFsDhL44qyC3a9L1euW23hGP");
+// Wallet imports
+import { PhantomWalletAdapter } from '@solana/wallet-adapter-phantom';
+import { SolflareWalletAdapter } from '@solana/wallet-adapter-solflare';
+import { BackpackWalletAdapter } from '@solana/wallet-adapter-backpack';
+import { GlowWalletAdapter } from '@solana/wallet-adapter-glow';
+import { BraveWalletAdapter } from '@solana/wallet-adapter-brave';
+import { CoinbaseWalletAdapter } from '@solana/wallet-adapter-coinbase';
+import { MathWalletAdapter } from '@solana/wallet-adapter-mathwallet';
+import { TokenPocketWalletAdapter } from '@solana/wallet-adapter-tokenpocket';
+import { TrustWalletAdapter } from '@solana/wallet-adapter-trust';
+import { ExodusWalletAdapter } from '@solana/wallet-adapter-exodus';
+import { LedgerWalletAdapter } from '@solana/wallet-adapter-ledger';
+import { SafePalWalletAdapter } from '@solana/wallet-adapter-safepal';
+import { CloverWalletAdapter } from '@solana/wallet-adapter-clover';
+import { BitpieWalletAdapter } from '@solana/wallet-adapter-bitpie';
+import { Coin98WalletAdapter } from '@solana/wallet-adapter-coin98';
+import { HuobiWalletAdapter } from '@solana/wallet-adapter-huobi';
+import { SpotWalletAdapter } from '@solana/wallet-adapter-spot';
 
-const App = () => {
-  const [walletAddress, setWalletAddress] = useState<PublicKey | null>(null);
+// Toast notifications
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+import "@solana/wallet-adapter-react-ui/styles.css";
+import "./App.css";
+
+import './App.css';
+
+
+// Constants
+const DECIMALS = 9;
+const TOTAL_SUPPLY = 2000000000;
+const AVAILABLE_FOR_PURCHASE = 800000000;
+const PRICE_PER_TOKEN = 0.0375;
+const TOKEN_AUTHORITY = new PublicKey("ACF5o8USHkcexBrbuTL1KFsDhL44qyC3a9L1euW23hGP");
+
+// Language options
+const LANGUAGES = [
+  { code: 'en', name: 'English' },
+ 
+];
+
+// Translations
+const TRANSLATIONS = {
+  en: {
+    SolynX:"SolynX",
+    home: "Home",
+    presale: "Presale",
+    roadmap: "Roadmap",
+    whitepaper: "Whitepaper",
+    ailab: "AI Lab",
+    connectWallet: "Connect Wallet",
+    selectLanguage: "Select Language",
+  },
+  
+  
+};
+
+interface TransactionHistory {
+  txId: string;
+  amount: number;
+  cost: number;
+  timestamp: Date;
+  status: 'pending' | 'success' | 'failed';
+}
+
+function WalletContent() {
+  const { connection } = useConnection();
+  const { publicKey, sendTransaction, wallet, connect, connected } = useWallet();
+  const [status, setStatus] = useState("");
+  const [amountToBuy, setAmountToBuy] = useState<number>(1000);
   const [solBalance, setSolBalance] = useState<number>(0);
   const [loading, setLoading] = useState(false);
-  const [phantomInstalled, setPhantomInstalled] = useState(false);
-
-  // Verifica se o Phantom está instalado
-  useEffect(() => {
-    if ("solana" in window) {
-      setPhantomInstalled(true);
-      const provider = window.solana;
-      
-      // Verifica se já está conectado
-      provider.connect({ onlyIfTrusted: true })
-        .then(({ publicKey }) => {
-          setWalletAddress(publicKey);
-        })
-        .catch(() => {
-          // Se onlyIfTrusted falhar, significa que não está conectado automaticamente
-          setWalletAddress(null);
-        });
-      
-      // Listener para mudanças na conexão
-      provider.on("connect", (publicKey: PublicKey) => {
-        setWalletAddress(publicKey);
-      });
-      
-      provider.on("disconnect", () => {
-        setWalletAddress(null);
-      });
-      
-      return () => {
-        provider.removeListener("connect");
-        provider.removeListener("disconnect");
-      };
-    } else {
-      setPhantomInstalled(false);
+  const [transactionHistory, setTransactionHistory] = useState<TransactionHistory[]>([]);
+  const [lastTransaction, setLastTransaction] = useState<string | null>(null);
+  const [timeLeft, setTimeLeft] = useState({
+    days: 7,
+    hours: 12,
+    minutes: 34,
+    seconds: 22
+  });
+  const [activeTab, setActiveTab] = useState('home');
+  const [scrolling, setScrolling] = useState(false);
+  const [currentLanguage, setCurrentLanguage] = useState('en');
+  const [showLanguageDropdown, setShowLanguageDropdown] = useState(false);
+  const [showWhitepaper, setShowWhitepaper] = useState(false);
+  const [showAILab, setShowAILab] = useState(false);
+  const [nftDescription, setNftDescription] = useState("");
+  const [isGeneratingNFT, setIsGeneratingNFT] = useState(false);
+  const [marketData, setMarketData] = useState<any>(null);
+  const [teamMembers] = useState([
+    
+     
+  ]);
+  const [faqs] = useState([
+    {
+      question: "What is SolynX.AI?",
+      answer: "SolynX.AI is a decentralized artificial intelligence platform built on the Solana blockchain that combines cutting-edge AI models with blockchain technology to provide transparent, secure and efficient AI services."
+    },
+    {
+      question: "How does the presale work?",
+      answer: "During the presale, you can purchase SYX tokens at a discounted price. Tokens will be distributed after the presale concludes. There are multiple rounds with increasing prices."
+    },
+    {
+      question: "What can I do with SYX tokens?",
+      answer: "SYX tokens are the utility token of the SolynX.AI ecosystem. They can be used to pay for AI services, participate in governance, stake for rewards, and access premium features."
+    },
+    {
+      question: "When will the tokens be listed?",
+      answer: "We plan to list SYX on decentralized exchanges immediately after the presale concludes, followed by centralized exchange listings in subsequent phases."
+    },
+    {
+      question: "Is there a vesting period?",
+      answer: "Presale tokens have no vesting period and will be distributed immediately after the presale ends. Team and advisor tokens have a 12-month linear vesting schedule."
+    },
+    {
+      question: "How can I participate in governance?",
+      answer: "SYX token holders can participate in governance by staking their tokens and voting on proposals that shape the future of the SolynX.AI platform."
     }
-  }, []);
+  ]);
+  const [activeFaq, setActiveFaq] = useState<number | null>(null);
 
-  const connectWallet = async () => {
-    if (!phantomInstalled) {
-      alert("Instale a carteira Phantom.");
+  // Get current translations
+  const t = TRANSLATIONS[currentLanguage as keyof typeof TRANSLATIONS] || TRANSLATIONS.en;
+
+  // Format numbers with decimals
+  const formatNumber = (value: number | undefined, decimals: number = 4): string => {
+    if (value === undefined || isNaN(value)) return '0'.padEnd(decimals + 2, '.0');
+    return value.toFixed(decimals);
+  };
+
+  // Calculate total cost
+  const totalCost = useMemo(() => {
+    return amountToBuy * PRICE_PER_TOKEN;
+  }, [amountToBuy]);
+
+  // Handle scroll to detect tab changes
+  useEffect(() => {
+    const handleScroll = () => {
+      if (scrolling || showWhitepaper || showAILab) return;
+      
+      const sections = ['home', 'presale', 'roadmap', 'team', 'faq'];
+      const scrollPosition = window.scrollY + window.innerHeight / 3;
+      
+      for (const section of sections) {
+        const element = document.getElementById(section);
+        if (element) {
+          const { offsetTop, offsetHeight } = element;
+          if (scrollPosition > offsetTop && scrollPosition <= offsetTop + offsetHeight) {
+            setActiveTab(section);
+            break;
+          }
+        }
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [scrolling, showWhitepaper, showAILab]);
+
+  // Scroll to section when tab is clicked
+  const scrollToSection = (sectionId: string) => {
+    if (sectionId === 'whitepaper') {
+      setShowWhitepaper(true);
+      setShowAILab(false);
+      setActiveTab('whitepaper');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
     }
     
-    try {
-      const { publicKey } = await window.solana.connect();
-      setWalletAddress(publicKey);
-    } catch (err) {
-      console.error("Erro ao conectar carteira:", err);
-      alert("Erro ao conectar carteira. Por favor, tente novamente.");
+    if (sectionId === 'ailab') {
+      setShowAILab(true);
+      setShowWhitepaper(false);
+      setActiveTab('ailab');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
     }
+    
+    setShowWhitepaper(false);
+    setShowAILab(false);
+    setScrolling(true);
+    setActiveTab(sectionId);
+    const element = document.getElementById(sectionId);
+    if (element) {
+      window.scrollTo({
+        top: element.offsetTop,
+        behavior: 'smooth'
+      });
+    }
+    setTimeout(() => setScrolling(false), 1000);
   };
 
-  const getBalance = async () => {
-    if (!walletAddress) return;
-    const connection = new Connection(RPC_URL);
-    const balance = await connection.getBalance(walletAddress);
-    setSolBalance(balance / LAMPORTS_PER_SOL);
-  };
+  // Fetch SOL balance
+  useEffect(() => {
+    if (!publicKey || !connection) return;
 
-  const sendSol = async (amountSol: number) => {
-    if (!walletAddress) {
-      alert("Conecte a carteira primeiro.");
+    const fetchBalance = async () => {
+      try {
+        const balance = await connection.getBalance(publicKey);
+        setSolBalance(balance / LAMPORTS_PER_SOL);
+      } catch (error) {
+        console.error("Error fetching balance:", error);
+        toast.error("Failed to fetch wallet balance");
+      }
+    };
+
+    fetchBalance();
+    const interval = setInterval(fetchBalance, 30000);
+
+    return () => clearInterval(interval);
+  }, [publicKey, connection]);
+
+
+
+
+  // Buy tokens function
+  const buyTokens = async () => {
+    if (!publicKey || !connection || !sendTransaction) {
+      toast.error("Wallet not connected");
       return;
     }
 
+    if (amountToBuy <= 0) {
+      toast.error("Amount must be greater than 0");
+      return;
+    }
+
+    setLoading(true);
+    setStatus("Processing transaction...");
+
     try {
-      setLoading(true);
-      const connection = new Connection(RPC_URL);
+      const lamports = Math.ceil(totalCost * LAMPORTS_PER_SOL);
+      
       const transaction = new Transaction().add(
+        ComputeBudgetProgram.setComputeUnitLimit({ units: 100000 }),
         SystemProgram.transfer({
-          fromPubkey: walletAddress,
-          toPubkey: RECEIVER_WALLET,
-          lamports: amountSol * LAMPORTS_PER_SOL,
+          fromPubkey: publicKey,
+          toPubkey: TOKEN_AUTHORITY,
+          lamports,
         })
       );
 
-      transaction.feePayer = walletAddress;
       transaction.recentBlockhash = (await connection.getLatestBlockhash()).blockhash;
+      transaction.feePayer = publicKey;
 
-      const signed = await window.solana.signTransaction(transaction);
-      const txid = await connection.sendRawTransaction(signed.serialize());
-      await connection.confirmTransaction(txid);
+      const signature = await sendTransaction(transaction, connection);
+      setLastTransaction(signature);
 
-      console.log("Transação confirmada! TXID:", txid);
-      getBalance();
+      const newTransaction: TransactionHistory = {
+        txId: signature,
+        amount: amountToBuy,
+        cost: totalCost,
+        timestamp: new Date(),
+        status: 'pending'
+      };
+
+      setTransactionHistory(prev => [newTransaction, ...prev]);
+      toast.success("Transaction sent! Waiting for confirmation...");
+
+      const confirmation = await connection.confirmTransaction(signature, 'confirmed');
+      if (confirmation.value.err) {
+        throw new Error("Transaction failed");
+      }
+
+      setStatus("Transaction confirmed!");
+      toast.success("Tokens purchased successfully!");
+      
+      setTransactionHistory(prev => prev.map(tx => 
+        tx.txId === signature ? { ...tx, status: 'success' } : tx
+      ));
+
     } catch (error) {
-      console.error("Erro ao enviar SOL:", error);
-      alert("Erro ao enviar SOL. Verifique o console para mais detalhes.");
+      console.error("Transaction error:", error);
+      setStatus("Transaction failed");
+      toast.error("Failed to complete transaction");
+      
+      if (lastTransaction) {
+        setTransactionHistory(prev => prev.map(tx => 
+          tx.txId === lastTransaction ? { ...tx, status: 'failed' } : tx
+        ));
+      }
     } finally {
       setLoading(false);
     }
   };
 
-  useEffect(() => {
-    if (walletAddress) {
-      getBalance();
-    }
-  }, [walletAddress]);
 
-  return (
-    <div style={{ padding: "2rem", fontFamily: "Arial", textAlign: "center" }}>
-      <h1>DeAgroX - Conexão Solana</h1>
-      {walletAddress ? (
-        <>
-          <p><strong>Carteira:</strong> {walletAddress.toBase58()}</p>
-          <p><strong>Saldo:</strong> {solBalance.toFixed(4)} SOL</p>
-          <button onClick={() => sendSol(0.01)} disabled={loading}>
-            {loading ? "Enviando..." : "Enviar 0.01 SOL"}
-          </button>
-        </>
-      ) : (
-        <button onClick={connectWallet} disabled={!phantomInstalled}>
-          {phantomInstalled ? "Conectar carteira Phantom" : "Instale o Phantom Wallet"}
-        </button>
-      )}
+  // Toggle FAQ item
+  const toggleFaq = (index: number) => {
+    setActiveFaq(activeFaq === index ? null : index);
+  };
+ 
+ 
+ 
+
+  // FAQ content
+  const FAQContent = () => (
+    <div className="faq-content glass-card">
+      <h2 className="section-title">Frequently Asked Questions</h2>
+      <p className="section-subtitle">Find answers to common questions about SolynX.AI</p>
+      
+      <div className="faq-list">
+        {faqs.map((faq, index) => (
+          <div 
+            key={index} 
+            className={`faq-item ${activeFaq === index ? 'active' : ''}`}
+            onClick={() => toggleFaq(index)}
+          >
+            <div className="faq-question">
+              <h3>{faq.question}</h3>
+              <span className="toggle-icon">
+                {activeFaq === index ? '−' : '+'}
+              </span>
+            </div>
+            {activeFaq === index && (
+              <div className="faq-answer">
+                <p>{faq.answer}</p>
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+      
+      <div className="contact-cta">
+        <h3>Still have questions?</h3>
+        <p>Join our community or contact our support team</p>
+        <div className="contact-buttons">
+          <button className="telegram-button">Telegram</button>
+          <button className="email-button">Email Us</button>
+        </div>
+      </div>
     </div>
   );
-};
+
+  return (
+    <div className="app-container">
+      {/* Header with Tabs and Wallet Button */}
+      <header className="app-header">
+        <div className="header-content">
+          <div className="navigation-tabs">  
+            
+         <p className="titlethe" > SolynX.AI</p>
+           
+          </div>
+          <div className="header-right">
+         
+            <div className="wallet-button-container">
+              <WalletMultiButton className="wallet-button">{t.connectWallet}</WalletMultiButton>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {/* Main Content - Now using sections for scrolling */}
+      <main className="main-content">
+        {showWhitepaper ? (
+          <WhitepaperContent />
+        ) : showAILab ? (
+          <AILabContent />
+        ) : (
+          <>
+        
+       {/* Presale Section */}
+<section id="presale" className="section">
+  <div className="presale-content modern-card">
+    <div className="presale-header">
+      <h2 className="presale-title">Exclusive Opportunity ASY Token Presale</h2>
+      <div className="progress-container">
+        <div className="progress-bar" style={{ width: '65%' }}></div>
+      
+      </div>
+    </div>
+
+    <div className="presale-grid">
+      {/* Countdown Timer */}
+      <div className="countdown-modern">
+        <div className="timer-row">
+          <div className="timer-segment-modern">
+            <span className="timer-value">{timeLeft.days}</span>
+            <span className="timer-label">DAYS</span>
+          </div>
+          <div className="timer-segment-modern">
+            <span className="timer-value">{timeLeft.hours}</span>
+            <span className="timer-label">HOURS</span>
+          </div>
+          <div className="timer-segment-modern">
+            <span className="timer-value">{timeLeft.minutes}</span>
+            <span className="timer-label">MINUTES</span>
+          </div>
+          <div className="timer-segment-modern">
+            <span className="timer-value">{timeLeft.seconds}</span>
+            <span className="timer-label">SECONDS</span>
+          </div>
+        </div>
+      </div>
+
+
+
+      {/* Purchase Section */}
+      <div className="purchase-modern">
+        <div className="amount-selector">
+          <label>SELECT AMOUNT (SYX)</label>
+          <div className="amount-input">
+            <input
+              type="number"
+              value={amountToBuy}
+              onChange={(e) => setAmountToBuy(Number(e.target.value))}
+              min={1000}
+              step={1000}
+            />
+            <div className="quick-buttons">
+              <button onClick={() => setAmountToBuy(1000)}>1K</button>
+              <button onClick={() => setAmountToBuy(5000)}>5K</button>
+              <button onClick={() => setAmountToBuy(10000)}>10K</button>
+              <button onClick={() => setAmountToBuy(50000)}>50K</button>
+            </div>
+          </div>
+        </div>
+
+        <div className="summary-modern">
+          <div className="summary-row">
+            <span>YOU WILL RECEIVE</span>
+            <span>{amountToBuy.toLocaleString()} SYX</span>
+          </div>
+          <div className="summary-row">
+            <span>TOTAL COST</span>
+            <span>{formatNumber(totalCost)} SOL</span>
+          </div>
+          <div className="summary-row">
+            <span>YOUR SOL BALANCE</span>
+            <span>{formatNumber(solBalance)} SOL</span>
+          </div>
+          <div className="summary-row highlight">
+            <span>CURRENT BONUS</span>
+            <span>+15% EXTRA TOKENS</span>
+          </div>
+        </div>
+
+        <button
+          className="buy-button-modern"
+          onClick={buyTokens}
+          disabled={loading || !connected || totalCost > solBalance}
+        >
+          {loading ? (
+            <span className="spinner"></span>
+          ) : connected ? (
+            totalCost > solBalance ? "INSUFFICIENT SOL BALANCE" : "PURCHASE SYX TOKENS"
+          ) : (
+            "CONNECT WALLET TO PURCHASE"
+          )}
+        </button>
+
+        <div className="disclaimer">
+          <p>Tokens will be distributed after the presale concludes. Bonus tokens will be automatically credited.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {/* Transaction History */}
+  {lastTransaction && (
+    <div className="transaction-details glass-card">
+      <h3>Last Transaction</h3>
+      <p>ID {lastTransaction}</p>
+      <p>Status Processing</p>
+    </div>
+  )}
+
+  {transactionHistory.length > 0 && (
+    <div className="transaction-history glass-card">
+      <h3>Transaction History</h3>
+      <div className="history-table">
+        <div className="history-header">
+          <span>Date</span>
+          <span>Amount</span>
+          <span>Cost</span>
+          <span>Status</span>
+        </div>
+        {transactionHistory.map((tx, index) => (
+          <div className="history-row" key={index}>
+            <span>{tx.timestamp.toLocaleString()}</span>
+            <span>{tx.amount} SYX</span>
+            <span>{tx.cost} SOL</span>
+            <span className={`status-${tx.status}`}>{tx.status}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  )}
+</section>
+
+
+
+            {/* Roadmap Section */}
+            <section id="roadmap" className="section">
+              <div className="roadmap-content glass-card">
+                <h2 className="roadmap-title">SolynX.AI Journey</h2>
+                <p className="roadmap-subtitle">Our strategic plan to build the most advanced blockchain AI platform</p>
+                
+                <div className="roadmap-timeline">
+                  <div className="timeline-item">
+                    <div className="timeline-marker"></div>
+                    <div className="timeline-content">
+                      <h3>Q1 2025: Foundation</h3>
+                      <ul>
+                        <li>Project conception and market research</li>
+                        <li>Formation of core development team</li>
+                        <li>Development of technical whitepaper</li>
+                        <li>First smart contract prototypes</li>
+                        <li>Initial strategic partnerships</li>
+                      </ul>
+                    </div>
+                  </div>
+                  
+                  <div className="timeline-item">
+                    <div className="timeline-marker"></div>
+                    <div className="timeline-content">
+                      <h3>Q2 2025: Development</h3>
+                      <ul>
+                        <li>Finalization of tokenomics and governance model</li>
+                        <li>Complete smart contract audits</li>
+                        <li>Web platform and API development</li>
+                        <li>Private funding round</li>
+                        <li>Initial integration of AI models</li>
+                      </ul>
+                    </div>
+                  </div>
+                  
+                  <div className="timeline-item">
+                    <div className="timeline-marker"></div>
+                    <div className="timeline-content">
+                      <h3>Q3 2025: Presale & Launch</h3>
+                      <ul>
+                        <li>Public presale event for SYX tokens</li>
+                        <li>Listings on decentralized exchanges</li>
+                        <li>Initial token distribution</li>
+                        <li>Integration of basic AI models</li>
+                        <li>Launch of first SDK version</li>
+                      </ul>
+                    </div>
+                  </div>
+                  
+                  <div className="timeline-item">
+                    <div className="timeline-marker"></div>
+                    <div className="timeline-content">
+                      <h3>Q4 2025: Expansion</h3>
+                      <ul>
+                        <li>Listings on centralized exchanges</li>
+                        <li>Announcement of strategic project partnerships</li>
+                        <li>Implementation of advanced AI features</li>
+                        <li>Community growth initiatives</li>
+                        <li>Developer incentive program</li>
+                      </ul>
+                    </div>
+                  </div>
+                  
+                  <div className="timeline-item">
+                    <div className="timeline-marker"></div>
+                    <div className="timeline-content">
+                      <h3>2025: Ecosystem Growth</h3>
+                      <ul>
+                        <li>Full platform launch</li>
+                        <li>Mobile app with complete features</li>
+                        <li>Custom enterprise solutions</li>
+                        <li>Global expansion and localization</li>
+                        <li>Integration with multiple blockchains</li>
+                      </ul>
+                    </div>
+                  </div>
+                  
+                  <div className="timeline-item">
+                    <div className="timeline-marker"></div>
+                    <div className="timeline-content">
+                      <h3>2025: Future Vision</h3>
+                      <ul>
+                        <li>Implementation of general AI</li>
+                        <li>Fully decentralized governance</li>
+                        <li>Self-sustaining ecosystem</li>
+                        <li>Mass adoption across various sectors</li>
+                        <li>Revolutionizing the AI industry</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="roadmap-cta">
+                  <h3>Join Us On This Journey</h3>
+                  <p>Participate in the presale and become one of the pioneers in the decentralized artificial intelligence revolution. Support the project by acquiring SYX tokens and gain exclusive benefits in the SolynX.AI ecosystem.</p>
+                  <button 
+                    className="buy-button"
+                    onClick={() => scrollToSection('presale')}
+                  >
+                    JOIN THE PRESALE
+                  </button>
+                </div>
+              </div>
+            </section>
+
+            {/* FAQ Section */}
+            <section id="faq" className="section">
+              <FAQContent />
+            </section>
+          </>
+        )}
+      </main>
+       
+      <footer className="app-footer">
+        <div className="footer-content glass-card">
+          <div className="footer-logo">
+            <h3>SolynX.AI</h3>
+            <p>Blockchain Artificial Intelligence</p>
+          </div>
+          <div className="footer-links">
+            <a href="#" target="_blank" rel="noopener noreferrer">Terms of Service</a>
+            <a href="#" target="_blank" rel="noopener noreferrer">Privacy Policy</a>
+            <a href="#" onClick={(e) => { e.preventDefault(); scrollToSection('whitepaper'); }}>Whitepaper</a>
+            <a href="#" onClick={(e) => { e.preventDefault(); scrollToSection('ailab'); }}>AI Lab</a>
+            <a href="#" target="_blank" rel="noopener noreferrer">Contact</a>
+          </div>
+          <div className="footer-social">
+            <p>Follow us on social media</p>
+            <div className="social-icons">
+              <a href="#" target="_blank" rel="noopener noreferrer">Twitter</a>
+              <a href="#" target="_blank" rel="noopener noreferrer">Telegram</a>
+              <a href="#" target="_blank" rel="noopener noreferrer">Discord</a>
+              <a href="#" target="_blank" rel="noopener noreferrer">GitHub</a>
+            </div>
+          </div>
+        </div>
+        <div className="footer-copyright">
+          <p>© 2025 SolynX.AI. All rights reserved.</p>
+        </div>
+      </footer>
+
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+      />
+    </div>
+  );
+}
+
+function App() {
+  const network = WalletAdapterNetwork.Devnet;
+  const endpoint = useMemo(() => clusterApiUrl(network), [network]);
+
+  const wallets = useMemo(
+    () => [
+      new PhantomWalletAdapter(),
+      new SolflareWalletAdapter(),
+      new BackpackWalletAdapter(),
+      new GlowWalletAdapter(),
+      new BraveWalletAdapter(),
+      new CoinbaseWalletAdapter(),
+      new MathWalletAdapter(),
+      new TokenPocketWalletAdapter(),
+      new TrustWalletAdapter(),
+      new ExodusWalletAdapter(),
+      new LedgerWalletAdapter(),
+      new SafePalWalletAdapter(),
+      new CloverWalletAdapter(),
+      new BitpieWalletAdapter(),
+      new Coin98WalletAdapter(),
+      new HuobiWalletAdapter(),
+      new SpotWalletAdapter(),   
+    ],
+    [network]
+  );
+
+  return (
+    <ConnectionProvider endpoint={endpoint}>
+      <WalletProvider wallets={wallets} autoConnect>
+        <WalletModalProvider>
+        <div className="App">
+            <WalletContent />
+          </div>
+        </WalletModalProvider>
+      </WalletProvider>
+    </ConnectionProvider>
+  );
+}
 
 export default App;
+
