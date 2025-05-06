@@ -1,14 +1,3 @@
-import './App.css';
-
-
-    <div className="app-container">
-      <div className="face-wrapper">
-        <img src="gpt4.png" alt="AI face" className="animated-face" />
-      </div>
-    </div>
-  
-
-
 import { useMemo, useState, useEffect } from "react";
 import {
   ConnectionProvider,
@@ -979,14 +968,13 @@ function App() {
     <ConnectionProvider endpoint={endpoint}>
       <WalletProvider wallets={wallets} autoConnect>
         <WalletModalProvider>
-          <div className="App">
-            <WalletContent />
-          </div>
+          <WalletMultiButton />
+          {/* Your app's components go here, nested within the context providers. */}
         </WalletModalProvider>
       </WalletProvider>
     </ConnectionProvider>
   );
-}
+};
 
 export default App;
 
