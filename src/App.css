@@ -1781,14 +1781,33 @@ margin-left: 3%;
 
 .titlethe {
 
-  font-size: 1.5rem;
+ font-size: 1.5rem;
   background: var(--gradient);
   -webkit-background-clip: text;
   color: transparent;
   margin-top: 1.2%;
-  margin-left: 159px; 
+  margin-left:  150px; 
   display: inline-block;
   transform: translateX(-25px); 
+  
+}
+
+.presale-grid {
+  background-color: transparent;
+  margin: 0 auto;
+  padding: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+
+.timer-segment-modern {
+
+
+  background-color: transparent;
+ 
+  padding: 0;
+  width: 100%;
   
 }
 
