@@ -1795,6 +1795,7 @@ margin-left: 3%;
 
 /* ===== MOBILE STYLES (max-width: 768px) ===== */
 @media (max-width: 768px) {
+  /* Grid principal para a pré-venda */
   .presale-grid {
     display: flex;
     flex-direction: column;
@@ -1804,6 +1805,7 @@ margin-left: 3%;
     box-sizing: border-box;
   }
 
+  /* Estilo do contador */
   .countdown-modern {
     background: rgba(255, 255, 255, 0.05);
     padding: 16px;
@@ -1812,6 +1814,7 @@ margin-left: 3%;
     backdrop-filter: blur(5px);
   }
 
+  /* Estilo da linha do timer */
   .timer-row {
     display: flex;
     justify-content: space-between;
@@ -1829,6 +1832,7 @@ margin-left: 3%;
     box-shadow: 0 2px 4px rgba(0,0,0,0.2);
   }
 
+  /* Tamanho e cor do texto do timer */
   .timer-value {
     font-size: 22px;
     font-weight: bold;
@@ -1843,6 +1847,7 @@ margin-left: 3%;
     letter-spacing: 0.5px;
   }
 
+  /* Selector de valor de quantia */
   .amount-selector {
     padding: 16px;
     background: #111;
@@ -1850,6 +1855,7 @@ margin-left: 3%;
     border: 1px solid #333;
   }
 
+  /* Estilo de input dentro do selector */
   .amount-input input {
     width: 100%;
     padding: 12px 14px;
@@ -1861,6 +1867,7 @@ margin-left: 3%;
     color: #fff;
   }
 
+  /* Botões rápidos para selecionar valor */
   .quick-buttons {
     display: flex;
     flex-wrap: wrap;
@@ -1883,6 +1890,7 @@ margin-left: 3%;
     background: #444;
   }
 
+  /* Resumo da pré-venda */
   .summary-modern {
     font-size: 14px;
     padding: 14px;
@@ -1893,6 +1901,7 @@ margin-left: 3%;
     border: 1px solid #2a2a2a;
   }
 
+  /* Botão de compra */
   .buy-button-modern {
     width: 100%;
     padding: 16px;
@@ -1911,7 +1920,7 @@ margin-left: 3%;
     background: #2a77c3;
   }
 
-  /* Adicionei melhorias de feedback visual */
+  /* Melhorias de feedback visual */
   input:focus {
     outline: none;
     border-color: #3b88d4;
@@ -1922,30 +1931,24 @@ margin-left: 3%;
     max-width: 100%;
     overflow-x: hidden;
   }
+
+  /* Centralizar e ajustar a pré-venda */
+  .presale-content {
+    position: relative;
+    top: -60px; /* número negativo = sobe */
+    padding: 1rem; /* Menos espaço interno */
+    font-size: 0.9rem; /* Texto um pouco menor */
+    transform: scale(0.95); /* Diminui o tamanho geral em 5% */
+    transition: transform 0.3s ease;
+    max-width: 100%; /* Garantir que a largura seja 100% */
+    margin: 1rem auto; /* Centraliza e dá espaço em volta */
+  }
 }
 
-
-
+/* Ajustes gerais */
 .purchase-modern {
-
- 
-  margin-left: -70%;
-  margin-top: 1%;
-
-    }
-    
-
-    .presale-content {
-      position: relative;
-      top: -60px; /* número negativo = sobe */
-      
-        padding: 2rem;                /* Menos espaço interno */
-        font-size: 0.9rem;            /* Texto um pouco menor */
-        transform: scale(0.95);       /* Diminui o tamanho geral em 5% */
-        transition: transform 0.3s ease;
-        max-width: 500px;             /* Limita a largura */
-        margin:2rem auto;            /* Centraliza e dá espaço em volta */
-        margin-right: 30%;
-      }
-
+  margin-left: 0; /* Remover a margem esquerda */
+  margin-top: 10px; /* Ajustar o topo */
+  width: 100%; /* Garantir que a largura ocupe toda a tela */
+}
 
