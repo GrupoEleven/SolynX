@@ -1863,23 +1863,23 @@ margin-left: 3%;
   .amount-selector {
     padding: 32px;
     font-size: 1.1rem;
-    background: #111;
+    background: #e7e7e757;
     border-radius: 16px;
-    border: 1px solid #333;
+    border: 1px solid #33333328; 
     max-width: 500;
     margin: 0 auto;
-  
+
   }
 
   .amount-input input {
     padding: 16px 18px;
-    font-size: 18px;
+    font-size: 15px;
     border-radius: 10px;
   
   }
 
   .quick-buttons button {
-    font-size: 16px;
+    font-size: 12px;
     padding: 12px;
     border-radius: 10px; 
   }
@@ -1904,12 +1904,43 @@ margin-left: 3%;
   .purchase-modern {
     max-width: 600px;
     margin: 0 auto;
-    transform: translateX(-70px); /* move levemente pra esquerda */
-  
-    
+    transform: translateX(-140px); /* move levemente pra esquerda */
+  width: 140%;
+ 
   }
 }
 
 .presale-content {
   transform: scale(0.95) translateY(-40px); 
   }
+
+
+  @media (min-width: 769px) {
+    /* Aumenta o tamanho do card que engloba o relógio */
+    .countdown-modern {
+      padding: 10px; /* Aumenta o padding dentro do card */
+      width: 100%; /* Garante que o card ocupe toda a largura disponível */
+      max-width: 900px; /* Ajuste o valor para aumentar a largura do card */
+      margin: 0 auto; /* Centraliza o card */
+ 
+    }
+  
+    /* Aumenta o tamanho do relógio */
+    .timer-row {
+      font-size: 10px; /* Aumenta o tamanho do texto */
+    margin: 1%;
+    }
+  
+    .timer-segment-modern {
+      padding: 16px 12px; /* Aumenta o padding ao redor do relógio */
+      font-size: 20px; /* Aumenta o tamanho da fonte do relógio */
+    }
+  
+    /* Ajuste no fundo transparente que envolve o relógio */
+    .timer-segment-modern {
+      background: rgba(0, 0, 0, 0.4); /* Altere a cor de fundo para mais escura se necessário */
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Dá uma sombra mais forte */
+      border-radius: 12px; /* Adiciona bordas arredondadas ao redor */
+    }
+  }
+  
