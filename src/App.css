@@ -1820,6 +1820,8 @@ margin-left: 3%;
   text-align: center;
   backdrop-filter: blur(5px);
   margin-bottom: 15px; /* 👉 espaço entre o relógio e o próximo bloco */
+  padding-left: 10%;
+padding-right: 10%;
 }
 
 
