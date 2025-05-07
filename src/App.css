@@ -1856,3 +1856,55 @@ margin-left: 3%;
   text-transform: uppercase;
   letter-spacing: 0.4px;
 }
+
+
+/* ===== DESKTOP STYLES (min-width: 769px) ===== */
+@media (min-width: 769px) {
+  .amount-selector {
+    padding: 32px;
+    font-size: 1.1rem;
+    background: #111;
+    border-radius: 16px;
+    border: 1px solid #333;
+    max-width: 500;
+    margin: 0 auto;
+  
+  }
+
+  .amount-input input {
+    padding: 16px 18px;
+    font-size: 18px;
+    border-radius: 10px;
+  
+  }
+
+  .quick-buttons button {
+    font-size: 16px;
+    padding: 12px;
+    border-radius: 10px; 
+  }
+
+  .summary-modern {
+    font-size: 15px;
+    padding: 20px;
+    border-radius: 10px;
+ 
+  }
+
+  .buy-button-modern {
+    font-size: 18px;
+    padding: 18px;
+    border-radius: 12px;
+    
+  }
+}
+
+
+@media (min-width: 769px) {
+  .purchase-modern {
+    max-width: 600px;
+    margin: 0 auto;
+    transform: translateX(-70px); /* move levemente pra esquerda */
+  
+  }
+}
