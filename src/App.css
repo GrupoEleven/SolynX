@@ -1906,5 +1906,10 @@ margin-left: 3%;
     margin: 0 auto;
     transform: translateX(-70px); /* move levemente pra esquerda */
   
+    
   }
 }
+
+.presale-content {
+  transform: scale(0.95) translateY(-40px); 
+  }
